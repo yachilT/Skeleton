@@ -11,13 +11,14 @@ class Order;
 class Customer {
     public:
         Customer(int id, const string &name, int locationDistance, int maxOrders);
+        Customer(const Customer &other);
         const string &getName() const;
         int getId() const;
         int getCustomerDistance() const;
         int getMaxOrders() const; //Returns maxOrders
         int getNumOrders() const; //Returns num of orders the customer has made so far
         bool canMakeOrder() const; //Returns true if the customer didn't reach max orders
-        vector<int> &getOrders() const;
+        const vector<int> &getOrders() const;
         int addOrder(int orderId); //return OrderId if order was added successfully, -1 otherwise
 
         virtual Customer *clone() const = 0; // Return a copy of the customer
