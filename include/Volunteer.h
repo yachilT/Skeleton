@@ -10,6 +10,7 @@ using std::vector;
 class Volunteer {
     public:
         Volunteer(int id, const string &name);
+        Volunteer(const Volunteer& other);
         int getId() const;
         const string &getName() const;
         int getActiveOrderId() const;
@@ -38,7 +39,7 @@ class Volunteer {
 class CollectorVolunteer: public Volunteer {
 
     public:
-        CollectorVolunteer(int id, const string &name, int coolDown);
+        CollectorVolunteer(int id, string name, int coolDown);
         CollectorVolunteer *clone() const override;
         void step() override;
         int getCoolDown() const;
@@ -57,7 +58,7 @@ class CollectorVolunteer: public Volunteer {
 class LimitedCollectorVolunteer: public CollectorVolunteer {
 
     public:
-        LimitedCollectorVolunteer(int id, const string &name, int coolDown ,int maxOrders);
+        LimitedCollectorVolunteer(int id, string name, int coolDown ,int maxOrders);
         LimitedCollectorVolunteer *clone() const override;
         bool hasOrdersLeft() const override;
         bool canTakeOrder(const Order &order) const override;
@@ -75,7 +76,7 @@ class LimitedCollectorVolunteer: public CollectorVolunteer {
 class DriverVolunteer: public Volunteer {
 
     public:
-        DriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep);
+        DriverVolunteer(int id, string name, int maxDistance, int distancePerStep);
         DriverVolunteer *clone() const override;
 
         int getDistanceLeft() const;
