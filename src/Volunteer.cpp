@@ -33,7 +33,7 @@ CollectorVolunteer *CollectorVolunteer::clone() const
 };
 void CollectorVolunteer::step()
 {
-
+     // not implemented yet
 }
 int CollectorVolunteer::getCoolDown() const
 {
@@ -71,7 +71,12 @@ LimitedCollectorVolunteer *LimitedCollectorVolunteer::clone() const
 
 bool LimitedCollectorVolunteer::hasOrdersLeft() const
 {
-    return false;
+    return ordersLeft != 0;
+}
+
+void LimitedCollectorVolunteer::acceptOrder(const Order &order)
+{
+    // not implemented yet
 }
 
 //DriverVolunteer
