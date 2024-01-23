@@ -10,6 +10,7 @@ enum class OrderStatus {
     COLLECTING,
     DELIVERING,
     COMPLETED,
+    
 };
 
 #define NO_VOLUNTEER -1
@@ -35,4 +36,5 @@ class Order {
         OrderStatus status;
         int collectorId; //Initialized to NO_VOLUNTEER if no collector has been assigned yet
         int driverId; //Initialized to NO_VOLUNTEER if no driver has been assigned yet
+        const string statusToString() const; 
 };
