@@ -58,10 +58,10 @@ void CollectorVolunteer::acceptOrder(const Order &order)
 }
 string CollectorVolunteer::toString() const
 {
-    // not implemented yet
-    return "";
+    return "volunteer " + getName() + " collector " + std::to_string(getCoolDown());
 };
 //LimitedCollectorVolunteer
+
 LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, string name, int coolDown, int maxOrders): CollectorVolunteer(id,name,coolDown), maxOrders(maxOrders), ordersLeft(maxOrders){}
 LimitedCollectorVolunteer::LimitedCollectorVolunteer(const LimitedCollectorVolunteer &other): CollectorVolunteer(other), maxOrders(other.maxOrders), ordersLeft(other.ordersLeft) {}
 LimitedCollectorVolunteer *LimitedCollectorVolunteer::clone() const
@@ -74,9 +74,30 @@ bool LimitedCollectorVolunteer::hasOrdersLeft() const
     return ordersLeft != 0;
 }
 
+bool LimitedCollectorVolunteer::canTakeOrder(const Order &order) const
+{
+     // not implemented yet
+    return false;
+}
+
 void LimitedCollectorVolunteer::acceptOrder(const Order &order)
 {
     // not implemented yet
+}
+
+int LimitedCollectorVolunteer::getMaxOrders() const
+{
+    return maxOrders;
+}
+
+int LimitedCollectorVolunteer::getNumOrdersLeft() const
+{
+    return ordersLeft;
+}
+
+string LimitedCollectorVolunteer::toString() const
+{
+    return "volunteer " + getName() + " limited_collector " + std::to_string(getCoolDown()) + " " + std::to_string(maxOrders);
 }
 
 //DriverVolunteer
@@ -132,6 +153,47 @@ void DriverVolunteer::step()
 
 string DriverVolunteer::toString() const
 {
-    // not implemented yet
-    return "";
+    return "volunteer " + getName() + " driver " + std::to_string(getMaxDistance()) + " " + std::to_string(getDistancePerStep());
 }
+
+//LimitedDriverVolunteer
+
+LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep, int maxOrders): DriverVolunteer(id,name,maxDistance,distancePerStep),maxOrders(maxOrders), ordersLeft(maxOrders) {}
+LimitedDriverVolunteer::LimitedDriverVolunteer(const LimitedDriverVolunteer &other): DriverVolunteer(other), maxOrders(other.maxOrders), ordersLeft(other.ordersLeft) {}
+
+LimitedDriverVolunteer *LimitedDriverVolunteer::clone() const
+{
+    return new LimitedDriverVolunteer(*this);
+}
+
+int LimitedDriverVolunteer::getMaxOrders() const
+{
+    return maxOrders;
+}
+
+int LimitedDriverVolunteer::getNumOrdersLeft() const
+{
+    return ordersLeft;
+}
+
+bool LimitedDriverVolunteer::hasOrdersLeft() const
+{
+    return ordersLeft != 0;
+}
+
+bool LimitedDriverVolunteer::canTakeOrder(const Order &order) const
+{
+     // not implemented yet
+    return false;
+}
+
+void LimitedDriverVolunteer::acceptOrder(const Order &order)
+{
+     // not implemented yet
+}
+
+string LimitedDriverVolunteer::toString() const
+{
+     return "volunteer " + getName() + " driver " + std::to_string(getMaxDistance()) + " " + std::to_string(getDistancePerStep()) + " " +
+     std::to_string(maxOrders);
+} 
