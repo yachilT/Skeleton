@@ -26,6 +26,7 @@ class BaseAction{
         void complete();
         void error(string errorMsg);
         string getErrorMsg() const;
+        string getStatusToString() const;
 
     private:
         string errorMsg;
@@ -36,6 +37,7 @@ class SimulateStep : public BaseAction {
 
     public:
         SimulateStep(int numOfSteps);
+        SimulateStep(const SimulateStep &other);
         void act(WareHouse &wareHouse) override;
         std::string toString() const override;
         SimulateStep *clone() const override;
