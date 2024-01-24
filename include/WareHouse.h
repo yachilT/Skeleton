@@ -1,3 +1,6 @@
+#ifndef WAREHOUSE
+#define WAREHOUSE
+
 #pragma once
 #include <string>
 #include <vector>
@@ -64,3 +67,4 @@ class WareHouse {
         void deleteCustomers();
         void deleteOrders();
 };
+#endif
