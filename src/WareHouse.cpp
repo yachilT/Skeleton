@@ -115,7 +115,7 @@ WareHouse::~WareHouse()
 
 WareHouse::WareHouse(const WareHouse &other): isOpen(other.isOpen), customerCounter(other.customerCounter), volunteerCounter(other.volunteerCounter), ordersCounter(other.ordersCounter) 
 {
-    
+    for(Action* action: actionsLog)
 }
 
 WareHouse &WareHouse::operator=(const WareHouse& other)
