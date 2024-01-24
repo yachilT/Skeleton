@@ -47,6 +47,37 @@ void WareHouse::addAction(BaseAction *action)
     actionsLog.push_back(action);
 }
 
+bool WareHouse::isCustomerExists(int id) const
+{
+    for(Customer* customer: customers)
+        if(customer->getId() == id)
+            return true;
+    return false;
+}
+
+bool WareHouse::isVolunteerExists(int id) const
+{
+    for(Volunteer* volunteer: volunteers)
+        if(volunteer->getId() == id)
+            return true;
+    return false;
+}
+
+bool WareHouse::isOrderExists(int id) const
+{
+    for(Order* order: pendingOrders)
+        if(order->getId() == id)
+            return true;
+    for(Order* order: inProcessOrders)
+        if(order->getId() == id)
+            return true;
+    for(Order* order: completedOrders)
+        if(order->getId() == id)
+            return true;
+    
+    return false;
+}
+
 Customer &WareHouse::getCustomer(int customerId) const
 {
     for(Customer* c : customers)
