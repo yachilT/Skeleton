@@ -19,12 +19,15 @@ class WareHouse {
         WareHouse(const string &configFilePath);
         void start();
         int getOrdersCounter() const;
-        int getCustomerCounter() const;//
-        int getVolunteerCounter() const; // 
-        void addCustomer(Customer *customer); // 
-        void addVolunteer(Volunteer *v); //
+        int getCustomerCounter() const;
+        int getVolunteerCounter() const; 
+        void addCustomer(Customer *customer); 
+        void addVolunteer(Volunteer *v); 
         void addOrder(Order* order);
         void addAction(BaseAction* action);
+        bool isCustomerExists(int id) const;
+        bool isVolunteerExists(int id) const;
+        bool isOrderExists(int id) const;
         Customer &getCustomer(int customerId) const;
         Volunteer &getVolunteer(int volunteerId) const;
         Order &getOrder(int orderId) const;
@@ -38,7 +41,10 @@ class WareHouse {
         //Copy Assignment Operator
         WareHouse& operator=(const WareHouse &other);
         //Move Constructor
-        WareHouse(WareHouse&& other);
+        WareHouse(WareHouse&& other) noexcept;
+        //Move Assignment
+        WareHouse& operator=(WareHouse&& other) noexcept;
+
 
 
 
