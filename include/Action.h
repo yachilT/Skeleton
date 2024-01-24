@@ -69,7 +69,7 @@ class AddCustomer : public BaseAction {
         const CustomerType customerType;
         const int distance;
         const int maxOrders;
-        Customer *createCustomer();
+        Customer *createCustomer(int customerId);
 
 };
 

@@ -29,6 +29,7 @@ class Order {
         OrderStatus getStatus() const;
         const string toString() const;
         int getDistance() const;
+        const string statusToString() const; 
 
     private:
         const int id;
@@ -37,5 +38,4 @@ class Order {
         OrderStatus status;
         int collectorId; //Initialized to NO_VOLUNTEER if no collector has been assigned yet
         int driverId; //Initialized to NO_VOLUNTEER if no driver has been assigned yet
-        const string statusToString() const; 
 };

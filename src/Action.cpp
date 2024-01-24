@@ -37,6 +37,7 @@ SimulateStep::SimulateStep(const SimulateStep &other): numOfSteps(numOfSteps) {}
 
 void SimulateStep::act(WareHouse &wareHouse)
 {
+    wareHouse.addAction(this);
     //TO DO Figure out what to do
 }
 
@@ -56,6 +57,7 @@ AddOrder::AddOrder(const AddOrder &other) : customerId(other.customerId) {}
 
 void AddOrder::act(WareHouse &wareHouse)
 {
+    wareHouse.addAction(this);
     Customer &customer = wareHouse.getCustomer(customerId);
     if(customer.canMakeOrder())
     {
@@ -88,14 +90,51 @@ customerName(customerName),
 
 void AddCustomer::act(WareHouse &wareHouse)
 {
-    wareHouse.
+    wareHouse.addAction(this);
+    Customer *customer = createCustomer(wareHouse.getCustomerCounter());
+    wareHouse.addCustomer(customer);
 }
 
-Customer *AddCustomer::createCustomer()
+AddCustomer *AddCustomer::clone() const
+{
+    return new AddCustomer(*this);
+}
+
+string AddCustomer::toString() const
+{
+    return "addCustomer " + customerName + (customerType == CustomerType::Soldier ? "soldier" : "civilian") 
+    + " " + std::to_string(distance) + " " + std::to_string(maxOrders) + " " + getStatusToString();
+}
+
+Customer *AddCustomer::createCustomer(int customerId)
 {
     switch(customerType)
     {
         case CustomerType::Soldier:
-            return new SoldierCustomer()
+            return new SoldierCustomer(customerId, customerName, distance, maxOrders);
+        case CustomerType::Civilian:
+            return new CivilianCustomer(customerId, customerName, distance, maxOrders);
     }
+}
+
+PrintOrderStatus::PrintOrderStatus(int id) : orderId(id) {}
+
+void PrintOrderStatus::act(WareHouse &wareHouse)
+{
+    Order order = wareHouse.getOrder(orderId);
+    std::cout << "OrderId: " + std::to_string(order.getId()) 
+    + "\nOrderStatus: " + order.statusToString()
+    + "\nCustomerID: " + std::to_string(order.getCustomerId()) 
+    + "\nCollector: " + std::to_string(order.getCollectorId())
+    + "\nDriver: " + std::to_string(order.getDriverId())<< std::endl;
+}
+
+PrintOrderStatus *PrintOrderStatus::clone() const
+{
+    return nullptr;
+}
+
+string PrintOrderStatus::toString() const
+{
+    return string();
 }
