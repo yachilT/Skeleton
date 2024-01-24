@@ -50,6 +50,11 @@ const string Order::toString() const
     return "OrderID: " + std::to_string(id) + ", OrderStatus: " + statusToString();
 }
 
+int Order::getDistance() const
+{
+    return distance;
+}
+
 const string Order::statusToString() const
 {
     switch(status){
