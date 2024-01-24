@@ -6,11 +6,34 @@ WareHouse::WareHouse(const string &configFilePath)
 
 void WareHouse::start()
 {
+
 }
 
 int WareHouse::getOrdersCounter() const
 {
     return ordersCounter;
+}
+
+int WareHouse::getCustomerCounter() const
+{
+    return customerCounter;
+}
+
+int WareHouse::getVolunteerCounter() const
+{
+    return volunteerCounter;
+}
+
+void WareHouse::addCustomer(Customer *customer)
+{
+    customers.push_back(customer);
+    customerCounter += 1;
+}
+
+void WareHouse::addVolunteer(Volunteer *v)
+{
+    volunteers.push_back(v);
+    volunteerCounter += 1;
 }
 
 void WareHouse::addOrder(Order *order)
@@ -79,7 +102,7 @@ void WareHouse::close()
 
 void WareHouse::open()
 {
-
+    isOpen = true;
 }
 
 WareHouse::~WareHouse()
@@ -88,6 +111,11 @@ WareHouse::~WareHouse()
     deleteCustomers();
     deleteVolunteers();
     deleteOrders();
+}
+
+WareHouse::WareHouse(const WareHouse &other): isOpen(other.isOpen), customerCounter(other.customerCounter), volunteerCounter(other.volunteerCounter), ordersCounter(other.ordersCounter) 
+{
+    
 }
 
 WareHouse &WareHouse::operator=(const WareHouse& other)

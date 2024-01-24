@@ -35,8 +35,10 @@ class WareHouse {
         ~WareHouse();
         //Copy Constructor
         WareHouse(const WareHouse& other);
-        // Copy Assignment Operator
+        //Copy Assignment Operator
         WareHouse& operator=(const WareHouse &other);
+        //Move Constructor
+        WareHouse(WareHouse&& other);
 
 
 
