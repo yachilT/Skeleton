@@ -34,7 +34,12 @@ CollectorVolunteer *CollectorVolunteer::clone() const
 };
 void CollectorVolunteer::step()
 {
-     // not implemented yet
+    timeLeft -= 1;
+    if(timeLeft == 0)
+    {
+        completedOrderId = activeOrderId; 
+        activeOrderId = NO_ORDER;
+    } 
 }
 int CollectorVolunteer::getCoolDown() const
 {
@@ -79,7 +84,7 @@ bool LimitedCollectorVolunteer::hasOrdersLeft() const
 
 bool LimitedCollectorVolunteer::canTakeOrder(const Order &order) const
 {
-     return !isBusy() && hasOrdersLeft();
+     return CollectorVolunteer::canTakeOrder(order) && hasOrdersLeft();
 }
 
 void LimitedCollectorVolunteer::acceptOrder(const Order &order)
@@ -141,17 +146,23 @@ bool DriverVolunteer::hasOrdersLeft() const
 
 bool DriverVolunteer::canTakeOrder(const Order &order) const
 {
-    return !isBusy();
+    return !isBusy() && order.getDistance() <= maxDistance;
 }
 
 void DriverVolunteer::acceptOrder(const Order &order)
 {
-    // not implemented yet
+    activeOrderId = order.getId();
+    distanceLeft = order.getDistance();
 }
 
 void DriverVolunteer::step()
 {
-    // not implemented yet
+   distanceLeft -= distancePerStep;
+   if(distanceLeft <= 0)
+   {
+    completedOrderId = activeOrderId;
+    activeOrderId = NO_ORDER;
+   }
 }
 
 string DriverVolunteer::toString() const
@@ -186,13 +197,13 @@ bool LimitedDriverVolunteer::hasOrdersLeft() const
 
 bool LimitedDriverVolunteer::canTakeOrder(const Order &order) const
 {
-     // not implemented yet
-    return false;
+    return DriverVolunteer::canTakeOrder(order) && ordersLeft != 0;
 }
 
 void LimitedDriverVolunteer::acceptOrder(const Order &order)
 {
-     // not implemented yet
+    DriverVolunteer::acceptOrder(order);
+    ordersLeft -= 1; 
 }
 
 string LimitedDriverVolunteer::toString() const
