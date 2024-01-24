@@ -8,9 +8,15 @@ void WareHouse::start()
 {
 }
 
+int WareHouse::getOrdersCounter() const
+{
+    return ordersCounter;
+}
+
 void WareHouse::addOrder(Order *order)
 {
     pendingOrders.push_back(order);
+    ordersCounter +=1;
 }
 
 void WareHouse::addAction(BaseAction *action)
@@ -31,7 +37,7 @@ Volunteer &WareHouse::getVolunteer(int volunteerId) const
 {
     for(int i = 0; i < volunteers.size(); i++)
     {
-        if(volunteers[i]->getId() == volunteerId)
+        if(*volunteers[i]->getId() == volunteerId)
             return *volunteers[i];
     }
 }
