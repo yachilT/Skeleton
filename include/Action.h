@@ -49,6 +49,7 @@ class SimulateStep : public BaseAction {
 class AddOrder : public BaseAction {
     public:
         AddOrder(int id);
+        AddOrder(const AddOrder &other);
         void act(WareHouse &wareHouse) override;
         string toString() const override;
         AddOrder *clone() const override;

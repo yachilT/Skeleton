@@ -52,12 +52,14 @@ SimulateStep *SimulateStep::clone() const
 
 AddOrder::AddOrder(int id) : customerId(id) {}
 
+AddOrder::AddOrder(const AddOrder &other) : customerId(other.customerId) {}
+
 void AddOrder::act(WareHouse &wareHouse)
 {
     Customer &customer = wareHouse.getCustomer(customerId);
     if(customer.canMakeOrder())
     {
-        int orderId;
+        int orderId = wareHouse.getOrdersCounter();
         customer.addOrder(orderId);
         Order *order = new Order(orderId, customerId, customer.getCustomerDistance());
         wareHouse.addOrder(order);
@@ -66,4 +68,20 @@ void AddOrder::act(WareHouse &wareHouse)
     {
         this->error("Cannot place this order");
     }
+}
+
+string AddOrder::toString() const
+{
+    return "order " + std::to_string(customerId) + " " + getStatusToString();
+}
+
+AddOrder *AddOrder::clone() const
+{
+    return new AddOrder(*this);
+}
+
+AddCustomer::AddCustomer(const string &customerName, const string &customerType, int distance, int maxOrders) : 
+customerName(customerName), distance(distance), maxOrders(maxOrders)
+{
+    
 }
