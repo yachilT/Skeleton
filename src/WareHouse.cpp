@@ -35,27 +35,132 @@ Customer &WareHouse::getCustomer(int customerId) const
 
 Volunteer &WareHouse::getVolunteer(int volunteerId) const
 {
-    for(int i = 0; i < volunteers.size(); i++)
+    for(Volunteer* v: volunteers)
     {
-        if(*volunteers->getId() == volunteerId)
-            return *volunteers[i];
+        if(v->getId() == volunteerId)
+            return *v;
     }
 }
 
 Order &WareHouse::getOrder(int orderId) const
 {
-    // TODO: insert return statement here
+    for(Order* o: pendingOrders)
+    {
+            if(o->getId() == orderId)
+                return *o;
+    }   
+    for(Order* o: inProcessOrders)
+    {
+            if(o->getId() == orderId)
+                return *o;
+    }  
+    for(Order* o: completedOrders)
+    {
+            if(o->getId() == orderId)
+                return *o;
+    }  
 }
+
 
 const vector<BaseAction *> &WareHouse::getActions() const
 {
-    // TODO: insert return statement here
+    return actionsLog;
 }
 
 void WareHouse::close()
 {
-}
+    for(BaseAction* action: actionsLog)
+    {
+        std::cout<< action->toString()<<std::endl;
+    }
+    isOpen = false;
+}   
+
 
 void WareHouse::open()
 {
+
+}
+
+WareHouse::~WareHouse()
+{
+    deleteActionsLog();
+    deleteCustomers();
+    deleteVolunteers();
+    deleteOrders();
+}
+
+WareHouse &WareHouse::operator=(const WareHouse& other)
+{
+    if(this != &other)
+    {
+        deleteActionsLog();
+        deleteCustomers();
+        deleteOrders();
+        deleteVolunteers();
+        isOpen = other.isOpen;
+        customerCounter = other.customerCounter;
+        volunteerCounter = other.volunteerCounter;
+        ordersCounter = other.ordersCounter;
+        actionsLog = other.actionsLog;
+        customers = other.customers;
+        volunteers = other.volunteers;
+        pendingOrders = other.pendingOrders;
+        inProcessOrders = other.inProcessOrders;
+        completedOrders = other.completedOrders;
+    }
+}
+
+
+
+void WareHouse::deleteActionsLog()
+{
+    while(!actionsLog.empty())
+    {
+        BaseAction *action = actionsLog.back();
+        actionsLog.pop_back();
+        delete action;
+    }
+}
+
+void WareHouse::deleteVolunteers()
+{
+    while(!volunteers.empty())
+    {
+        Volunteer *v = volunteers.back();
+        volunteers.pop_back();
+        delete v;
+    }
+}
+
+void WareHouse::deleteCustomers()
+{
+    while(!customers.empty())
+    {
+        Customer *c = customers.back();
+        customers.pop_back();
+        delete c;
+    }
+}
+
+void WareHouse::deleteOrders()
+{
+    while(!pendingOrders.empty())
+    {
+        Order *o = pendingOrders.back();
+        pendingOrders.pop_back();
+        delete o;
+    }
+    while(!inProcessOrders.empty())
+    {
+        Order *o = inProcessOrders.back();
+        inProcessOrders.pop_back();
+        delete o;
+    }
+    while(!completedOrders.empty())
+    {
+        Order *o = completedOrders.back();
+        completedOrders.pop_back();
+        delete o;
+    }
 }
