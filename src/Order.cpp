@@ -68,3 +68,8 @@ const string Order::statusToString() const
             return "Completed";
     }
 }
+
+Order *Order::clone()
+{
+    return new Order(*this);
+}

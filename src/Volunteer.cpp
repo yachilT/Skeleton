@@ -26,7 +26,6 @@ bool Volunteer::isBusy() const
 //CollectorVolunteer:
 
 CollectorVolunteer::CollectorVolunteer(int id, string name, int coolDown): Volunteer(id,name), coolDown(coolDown), timeLeft(0) {}
-CollectorVolunteer::CollectorVolunteer(const CollectorVolunteer& other): Volunteer(other), coolDown(other.coolDown), timeLeft(other.timeLeft) {}
 
 CollectorVolunteer *CollectorVolunteer::clone() const
 {
@@ -70,7 +69,6 @@ string CollectorVolunteer::toString() const
 //LimitedCollectorVolunteer
 
 LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, string name, int coolDown, int maxOrders): CollectorVolunteer(id,name,coolDown), maxOrders(maxOrders), ordersLeft(maxOrders){}
-LimitedCollectorVolunteer::LimitedCollectorVolunteer(const LimitedCollectorVolunteer &other): CollectorVolunteer(other), maxOrders(other.maxOrders), ordersLeft(other.ordersLeft) {}
 
 LimitedCollectorVolunteer *LimitedCollectorVolunteer::clone() const
 {
@@ -112,7 +110,7 @@ string LimitedCollectorVolunteer::toString() const
 //DriverVolunteer
 
 DriverVolunteer::DriverVolunteer(int id, string name, int maxDistance, int distancePerStep): Volunteer::Volunteer(id,name), maxDistance(maxDistance), distancePerStep(distancePerStep), distanceLeft(0) {}
-DriverVolunteer::DriverVolunteer(const DriverVolunteer &other): Volunteer(other), maxDistance(other.maxDistance),distancePerStep(other.distancePerStep), distanceLeft(other.distanceLeft) {}
+
 DriverVolunteer *DriverVolunteer::clone() const
 {
     return new DriverVolunteer(*this);
@@ -173,7 +171,7 @@ string DriverVolunteer::toString() const
 //LimitedDriverVolunteer
 
 LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep, int maxOrders): DriverVolunteer(id,name,maxDistance,distancePerStep),maxOrders(maxOrders), ordersLeft(maxOrders) {}
-LimitedDriverVolunteer::LimitedDriverVolunteer(const LimitedDriverVolunteer &other): DriverVolunteer(other), maxOrders(other.maxOrders), ordersLeft(other.ordersLeft) {}
+
 
 LimitedDriverVolunteer *LimitedDriverVolunteer::clone() const
 {

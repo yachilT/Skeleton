@@ -4,8 +4,8 @@
 using std::string;
 using std::vector;
 
-
-
+#ifndef CUSTOMER
+#define CUSTOMER
 class Customer {
     public:
         Customer(int id, const string &name, int locationDistance, int maxOrders);
@@ -18,7 +18,7 @@ class Customer {
         bool canMakeOrder() const; //Returns true if the customer didn't reach max orders
         const vector<int> &getOrdersIds() const;
         int addOrder(int orderId); //return OrderId if order was added successfully, -1 otherwise
-
+        virtual ~Customer();
         virtual Customer *clone() const = 0; // Return a copy of the customer
 
         
@@ -50,3 +50,5 @@ class CivilianCustomer: public Customer {
     private:
         
 };
+
+#endif

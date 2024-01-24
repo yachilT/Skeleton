@@ -5,6 +5,8 @@
 using std::string;
 using std::vector;
 
+#ifndef ORDER
+#define ORDER
 enum class OrderStatus {
     PENDING,
     COLLECTING,
@@ -30,6 +32,7 @@ class Order {
         const string toString() const;
         int getDistance() const;
         const string statusToString() const; 
+        Order *clone();
 
     private:
         const int id;
@@ -39,3 +42,5 @@ class Order {
         int collectorId; //Initialized to NO_VOLUNTEER if no collector has been assigned yet
         int driverId; //Initialized to NO_VOLUNTEER if no driver has been assigned yet
 };
+
+#endif

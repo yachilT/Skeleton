@@ -5,6 +5,9 @@
 using std::string;
 using std::vector;
 
+#ifndef ACTION
+#define ACTION
+
 enum class ActionStatus{
     COMPLETED, ERROR
 };
@@ -21,6 +24,7 @@ class BaseAction{
         virtual void act(WareHouse& wareHouse)=0;
         virtual string toString() const=0;
         virtual BaseAction* clone() const=0;
+        virtual ~BaseAction();
 
     protected:
         void complete();
@@ -143,3 +147,5 @@ class RestoreWareHouse : public BaseAction {
         string toString() const override;
     private:
 };
+
+#endif
