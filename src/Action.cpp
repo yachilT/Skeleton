@@ -57,9 +57,10 @@ void AddOrder::act(WareHouse &wareHouse)
     Customer &customer = wareHouse.getCustomer(customerId);
     if(customer.canMakeOrder())
     {
-        
-        customer.addOrder()
-        wareHouse.addOrder();
+        int orderId;
+        customer.addOrder(orderId);
+        Order *order = new Order(orderId, customerId, customer.getCustomerDistance());
+        wareHouse.addOrder(order);
     }
     else
     {
