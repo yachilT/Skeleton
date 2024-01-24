@@ -37,7 +37,7 @@ Volunteer &WareHouse::getVolunteer(int volunteerId) const
 {
     for(int i = 0; i < volunteers.size(); i++)
     {
-        if(*volunteers[i]->getId() == volunteerId)
+        if(*volunteers->getId() == volunteerId)
             return *volunteers[i];
     }
 }
