@@ -16,6 +16,7 @@ class WareHouse {
     public:
         WareHouse(const string &configFilePath);
         void start();
+        int getOrdersCounter() const;
         void addOrder(Order* order);
         void addAction(BaseAction* action);
         Customer &getCustomer(int customerId) const;
@@ -35,5 +36,5 @@ class WareHouse {
         vector<Customer*> customers;
         int customerCounter; //For assigning unique customer IDs
         int volunteerCounter; //For assigning unique volunteer IDs
-        int ordersCounter;
+        int ordersCounter; //For assigning unique orders IDS
 };
