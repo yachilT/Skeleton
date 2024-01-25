@@ -8,6 +8,8 @@ using std::vector;
 #ifndef ACTION
 #define ACTION
 
+extern WareHouse* backup = nullptr;
+
 enum class ActionStatus{
     COMPLETED, ERROR
 };
@@ -24,7 +26,7 @@ class BaseAction{
         virtual void act(WareHouse& wareHouse)=0;
         virtual string toString() const=0;
         virtual BaseAction* clone() const=0;
-        virtual ~BaseAction();
+        virtual ~BaseAction() = 0;
 
     protected:
         void complete();

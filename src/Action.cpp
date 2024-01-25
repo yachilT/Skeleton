@@ -223,3 +223,65 @@ string PrintActionsLog::toString() const
 {
     return "printActionLog " + getStatusToString();
 }
+
+Close::Close() {}
+
+void Close::act(WareHouse &wareHouse)
+{
+    wareHouse.addAction(this);
+    wareHouse.close();
+    complete();
+}
+
+Close *Close::clone() const
+{
+    return new Close(*this);
+}
+
+string Close::toString() const
+{
+    return "Close " + getStatusToString();
+}
+
+BackupWareHouse::BackupWareHouse() {}
+
+void BackupWareHouse::act(WareHouse &wareHouse)
+{
+    wareHouse.addAction(this);
+    backup = new WareHouse(wareHouse);
+    complete();
+}
+
+BackupWareHouse *BackupWareHouse::clone() const
+{
+    return new BackupWareHouse(*this);
+}
+
+string BackupWareHouse::toString() const
+{
+    return "backupWareHouse " + getStatusToString();
+}
+
+RestoreWareHouse::RestoreWareHouse() {}
+
+void RestoreWareHouse::act(WareHouse &wareHouse)
+{
+    wareHouse.addAction(this);
+    if (backup == nullptr)
+        error("No backup available");
+    else
+    {
+        wareHouse = *backup;
+        complete();
+    }
+}
+
+RestoreWareHouse *RestoreWareHouse::clone() const
+{
+    return new RestoreWareHouse(*this);
+}
+
+string RestoreWareHouse::toString() const
+{
+    return "restoreWareHouse " + getStatusToString();
+}
