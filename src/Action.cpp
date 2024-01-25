@@ -174,15 +174,52 @@ PrintVolunteerStatus::PrintVolunteerStatus(int id) : volunteerId(id) {}
 
 void PrintVolunteerStatus::act(WareHouse &wareHouse) 
 {
-    
+    wareHouse.addAction(this);
+    if (!wareHouse.isVolunteerExists(volunteerId))
+    {
+        error("Volunteer doesn't exist");
+    }
+    else
+    {
+        Volunteer &volunteer = wareHouse.getVolunteer(volunteerId);
+        std::cout << "VolunteerID: " + std::to_string(volunteerId)
+        + "\nisBusy: " + std::to_string(volunteer.isBusy()) << std::endl;
+        //+ "\nTimeLeft: " + volunteer.isBusy() ? std::to_string(volunteer.get) : "" << std::endl;
+        //TO DO: Finish with methods from collector\driver regarding time
+
+        complete();
+    }
 }
 
 PrintVolunteerStatus *PrintVolunteerStatus::clone() const
 {
-    return nullptr;
+    return new PrintVolunteerStatus(*this);
 }
 
 string PrintVolunteerStatus::toString() const
 {
-    return string();
+    return "printVolunteerStatus " + std::to_string(volunteerId) + " " + getStatusToString();
+}
+
+PrintActionsLog::PrintActionsLog() {}
+
+void PrintActionsLog::act(WareHouse &wareHouse)
+{
+    wareHouse.addAction(this);
+    vector<BaseAction*> actions = wareHouse.getActions();
+    for(BaseAction* action : actions)
+    {
+        std::cout << action << std::endl;
+    }
+    complete(); 
+}
+
+PrintActionsLog *PrintActionsLog::clone() const
+{
+    return new PrintActionsLog(*this);
+}
+
+string PrintActionsLog::toString() const
+{
+    return "printActionLog " + getStatusToString();
 }
