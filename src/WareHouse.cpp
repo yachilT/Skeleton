@@ -319,4 +319,27 @@ void WareHouse::deleteOrders()
         completedOrders.pop_back();
         delete o;
     }
+
+
+}
+
+std::vector<std::string> WareHouse::splitString(const std::string& input, char delimiter) {
+    std::vector<std::string> result;
+    std::string token;
+
+    for (char ch : input) {
+        if (ch != delimiter) {
+            token += ch;
+        } else {
+            result.push_back(token);
+            token.clear();
+        }
+    }
+
+    // Add the last token if the input doesn't end with the delimiter
+    if (!token.empty()) {
+        result.push_back(token);
+    }
+
+    return result;
 }
