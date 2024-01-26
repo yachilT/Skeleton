@@ -5,9 +5,8 @@
 #include "Order.h"
 #include "Customer.h"
 
-class Action; 
-class Volunteer; 
-#include "Action.h" // doifndef
+class BaseAction; 
+#include "Action.h" 
 #include "Volunteer.h"
 
 // Warehouse responsible for Volunteers, Customers Actions, and Orders.
