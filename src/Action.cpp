@@ -38,7 +38,8 @@ SimulateStep::SimulateStep(const SimulateStep &other): numOfSteps(other.numOfSte
 void SimulateStep::act(WareHouse &wareHouse)
 {
     wareHouse.addAction(this);
-    
+    wareHouse.assignOrders();
+    wareHouse.advanceTime();
     complete();
 }
 
@@ -129,11 +130,7 @@ void PrintOrderStatus::act(WareHouse &wareHouse)
     else
     {
         Order &order = wareHouse.getOrder(orderId);
-        std::cout << "OrderId: " + std::to_string(order.getId()) 
-        + "\nOrderStatus: " + order.statusToString()
-        + "\nCustomerID: " + std::to_string(order.getCustomerId()) 
-        + "\nCollector: " + std::to_string(order.getCollectorId())
-        + "\nDriver: " + std::to_string(order.getDriverId())<< std::endl;
+        std::cout << order.toString() << std::endl;
         complete();
     }
 }
@@ -192,23 +189,17 @@ void PrintVolunteerStatus::act(WareHouse &wareHouse)
     else
     {
         Volunteer &volunteer = wareHouse.getVolunteer(volunteerId);
-        std::cout << "VolunteerID: " + std::to_string(volunteerId)
-        + "\nisBusy: " + std::to_string(volunteer.isBusy())
-        + "\nOrderID: " + (volunteer.isBusy() ? std::to_string(volunteer.getActiveOrderId()) : "None")
-        + "\nTimeLeft: " + (volunteer.getTimeLeft() == -1 ? "None" : std::to_string(volunteer.getTimeLeft()))
-        + "\nOrdersLeft: " + (volunteer.getNumOrdersLeft() == -1 ? "No Limit" : std::to_string(volunteer.getNumOrdersLeft())) << std::endl;
-        
-
+        std::cout << volunteer.toString();
         complete();
     }
 }
 
 PrintVolunteerStatus *PrintVolunteerStatus::clone() const
 {
-    return nullptr;
+    return new PrintVolunteerStatus(*this);
 }
 
 string PrintVolunteerStatus::toString() const
 {
-    return string();
+    return "printVolunteerStatus " + std::to_string(volunteerId) + " " + getStatusToString();
 }

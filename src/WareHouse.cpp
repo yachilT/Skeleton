@@ -123,6 +123,52 @@ const vector<BaseAction *> &WareHouse::getActions() const
     return actionsLog;
 }
 
+void WareHouse::assignOrders()
+{
+    for(auto iter = pendingOrders.begin(); iter < pendingOrders.end(); iter++)
+    {
+        Order* order = *iter;
+        switch(order->getStatus())
+        {
+            case OrderStatus::PENDING:
+                CollectorVolunteer *collector = findAvailableCollector(*order);
+                if (collector != nullptr)
+                {
+                    collector->acceptOrder(*order);
+                    pendingOrders.erase(iter--);
+                    inProcessOrders.push_back(order);
+                    order->setStatus(OrderStatus::COLLECTING);
+                }
+            case OrderStatus::COLLECTING:
+                DriverVolunteer *driver = findAvailableDriver(*order);
+                if (driver != nullptr)
+                {
+                    driver->acceptOrder(*order);
+                    pendingOrders.erase(iter--);
+                    inProcessOrders.push_back(order);
+                    order->setStatus(OrderStatus::DELIVERING);
+                }
+        }
+
+    }
+}
+
+void WareHouse::advanceTime()
+{
+    for (Volunteer* volunteer : volunteers)
+    {
+        volunteer->step();
+    }
+}
+
+void WareHouse::pushOrders()
+{
+    for (auto iter = inProcessOrders.begin(); iter < inProcessOrders.end(); iter++)
+    {
+        Order *order = *iter;
+    }
+}
+
 void WareHouse::close()
 {
     for(BaseAction* action: actionsLog)
@@ -321,6 +367,26 @@ void WareHouse::deleteOrders()
     }
 
 
+}
+
+CollectorVolunteer* WareHouse::findAvailableCollector(Order &order)
+{
+    for(Volunteer *volunteer : volunteers)
+    {
+        if (!volunteer->isBusy() & !volunteer->canTakeOrder(order)& dynamic_cast<CollectorVolunteer*>(volunteer) != nullptr)
+            return dynamic_cast<CollectorVolunteer*>(volunteer);
+    }
+    return nullptr;
+}
+
+DriverVolunteer *WareHouse::findAvailableDriver(Order &order)
+{
+    for(Volunteer *volunteer : volunteers)
+    {
+        if (!volunteer->isBusy() & !volunteer->canTakeOrder(order)& dynamic_cast<DriverVolunteer*>(volunteer) != nullptr)
+            return dynamic_cast<DriverVolunteer*>(volunteer);
+    }
+    return nullptr;
 }
 
 std::vector<std::string> WareHouse::splitString(const std::string& input, char delimiter) {

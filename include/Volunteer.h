@@ -22,8 +22,6 @@ class Volunteer {
         virtual void acceptOrder(const Order &order) = 0; // Prepare for new order(Reset activeOrderId,TimeLeft,DistanceLeft,OrdersLeft depends on the volunteer type)
                 
         virtual void step() = 0; //Simulate volunteer step,if the volunteer finished the order, transfer activeOrderId to completedOrderId
-        virtual int getTimeLeft() const = 0;
-        virtual int getNumOrdersLeft() const = 0;
 
         virtual string toString() const = 0;
         virtual Volunteer* clone() const = 0; //Return a copy of the volunteer
@@ -43,17 +41,14 @@ class CollectorVolunteer: public Volunteer {
 
     public:
         CollectorVolunteer(int id, string name, int coolDown);
-
         CollectorVolunteer *clone() const override;
         void step() override;
         int getCoolDown() const;
-        int getTimeLeft() const override;
+        int getTimeLeft() const;
         bool decreaseCoolDown();//Decrease timeLeft by 1,return true if timeLeft=0,false otherwise
-        virtual bool hasOrdersLeft() const override;
-        virtual int getNumOrdersLeft() const override;
+        bool hasOrdersLeft() const override;
         bool canTakeOrder(const Order &order) const override;
-        void acceptOrder(const Order &order) override;
-        
+        virtual void acceptOrder(const Order &order) override;
         string toString() const override;
     
     private:
@@ -71,7 +66,7 @@ class LimitedCollectorVolunteer: public CollectorVolunteer {
         void acceptOrder(const Order &order) override;
 
         int getMaxOrders() const;
-        int getNumOrdersLeft() const override;
+        int getNumOrdersLeft() const;
         string toString() const override;
     
     private:
@@ -86,8 +81,6 @@ class DriverVolunteer: public Volunteer {
         DriverVolunteer *clone() const override;
 
         int getDistanceLeft() const;
-        int getTimeLeft() const override;
-        virtual int getNumOrdersLeft() const override;
         int getMaxDistance() const;
         int getDistancePerStep() const;  
         bool decreaseDistanceLeft(); //Decrease distanceLeft by distancePerStep,return true if distanceLeft<=0,false otherwise
@@ -109,10 +102,10 @@ class LimitedDriverVolunteer: public DriverVolunteer {
         LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep,int maxOrders);
         LimitedDriverVolunteer *clone() const override;
         int getMaxOrders() const;
-        int getNumOrdersLeft() const override;
+        int getNumOrdersLeft() const;
         bool hasOrdersLeft() const override;
         bool canTakeOrder(const Order &order) const override; // Signal if the volunteer is not busy, the order is within the maxDistance.
-        void acceptOrder(const Order &order) override; // Assign distanceLeft to order's distance and decrease ordersLeft
+        virtual void acceptOrder(const Order &order) override; // Assign distanceLeft to order's distance and decrease ordersLeft
         string toString() const override;
 
     private:

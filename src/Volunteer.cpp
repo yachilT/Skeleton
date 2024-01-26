@@ -20,7 +20,7 @@ int Volunteer::getCompletedOrderId() const
 }
 bool Volunteer::isBusy() const
 {
-    return activeOrderId == NO_ORDER && completedOrderId == NO_ORDER;
+    return activeOrderId == NO_ORDER;
 };
 
 //CollectorVolunteer:
@@ -60,10 +60,6 @@ bool CollectorVolunteer::hasOrdersLeft() const
     return true;
 }
 
-int CollectorVolunteer::getNumOrdersLeft() const
-{
-    return -1;
-}
 
 bool CollectorVolunteer::canTakeOrder(const Order &order) const
 {
@@ -76,7 +72,11 @@ void CollectorVolunteer::acceptOrder(const Order &order)
 }
 string CollectorVolunteer::toString() const
 {
-    return "volunteer " + getName() + " collector " + std::to_string(getCoolDown());
+    return "VolunteerID: " + std::to_string(this->getId())
+    + "\nisBusy: " + std::to_string(this->isBusy())
+    + "\nOrderID: " + (activeOrderId == -1 ? "None" : std::to_string(activeOrderId))
+    + "\nTimeLeft: " + std::to_string(timeLeft)
+    + "\nOrdersLeft: " + "No Limit";
 };
 //LimitedCollectorVolunteer
 
@@ -116,7 +116,11 @@ int LimitedCollectorVolunteer::getNumOrdersLeft() const
 
 string LimitedCollectorVolunteer::toString() const
 {
-    return "volunteer " + getName() + " limited_collector " + std::to_string(getCoolDown()) + " " + std::to_string(maxOrders);
+    return "VolunteerID: " + std::to_string(this->getId())
+    + "\nisBusy: " + std::to_string(this->isBusy())
+    + "\nOrderID: " + (activeOrderId == -1 ? "None" : std::to_string(activeOrderId))
+    + "\nTimeLeft: " + std::to_string(this->getTimeLeft())
+    + "\nOrdersLeft: " + std::to_string(ordersLeft);
 }
 
 //DriverVolunteer
@@ -133,15 +137,7 @@ int DriverVolunteer::getDistanceLeft() const
     return distanceLeft;
 }
 
-int DriverVolunteer::getTimeLeft() const
-{
-    return distanceLeft / distancePerStep;
-}
 
-int DriverVolunteer::getNumOrdersLeft() const
-{
-    return -1;
-}
 
 int DriverVolunteer::getMaxDistance() const
 {
@@ -169,7 +165,7 @@ bool DriverVolunteer::canTakeOrder(const Order &order) const
     return !isBusy() && order.getDistance() <= maxDistance;
 }
 
-void DriverVolunteer::acceptOrder(const Order &order)
+void DriverVolunteer:: acceptOrder(const Order &order)
 {
     activeOrderId = order.getId();
     distanceLeft = order.getDistance();
@@ -187,7 +183,11 @@ void DriverVolunteer::step()
 
 string DriverVolunteer::toString() const
 {
-    return "volunteer " + getName() + " driver " + std::to_string(getMaxDistance()) + " " + std::to_string(getDistancePerStep());
+    return "VolunteerID: " + std::to_string(this->getId())
+    + "\nisBusy: " + std::to_string(this->isBusy())
+    + "\nOrderID: " + (activeOrderId == -1 ? "None" : std::to_string(activeOrderId))
+    + "\nTimeLeft: " + std::to_string(distanceLeft)
+    + "\nOrdersLeft: " + "No Limit";
 }
 
 //LimitedDriverVolunteer
@@ -228,6 +228,9 @@ void LimitedDriverVolunteer::acceptOrder(const Order &order)
 
 string LimitedDriverVolunteer::toString() const
 {
-     return "volunteer " + getName() + " driver " + std::to_string(getMaxDistance()) + " " + std::to_string(getDistancePerStep()) + " " +
-     std::to_string(maxOrders);
+    return "VolunteerID: " + std::to_string(this->getId())
+    + "\nisBusy: " + std::to_string(this->isBusy())
+    + "\nOrderID: " + (activeOrderId == -1 ? "None" : std::to_string(activeOrderId))
+    + "\nTimeLeft: " + std::to_string(this->getDistanceLeft())
+    + "\nOrdersLeft: " + std::to_string(ordersLeft);
 } 

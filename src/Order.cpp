@@ -47,7 +47,11 @@ OrderStatus Order::getStatus() const
 
 const string Order::toString() const
 {
-    return "OrderID: " + std::to_string(id) + ", OrderStatus: " + statusToString();
+    return "OrderId: " + std::to_string(id)
+        + "\nOrderStatus: " + statusToString()
+        + "\nCustomerID: " + std::to_string(customerId) 
+        + "\nCollector: " + (collectorId == NO_VOLUNTEER ? "None" : std::to_string(collectorId))
+        + "\nDriver: " + (driverId == NO_VOLUNTEER ? "None" : std::to_string(driverId));
 }
 
 int Order::getDistance() const

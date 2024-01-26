@@ -32,6 +32,8 @@ class WareHouse {
         Order &getOrder(int orderId) const;
         const vector<BaseAction*> &getActions() const;
         void assignOrders();
+        void advanceTime();
+        void pushOrders();
         void close();
         void open();
         //Destructor
@@ -63,5 +65,6 @@ class WareHouse {
         void deleteVolunteers();
         void deleteCustomers();
         void deleteOrders();
-        void findAvailableCollector();
+        CollectorVolunteer* findAvailableCollector(Order &order);
+        DriverVolunteer* findAvailableDriver(Order &order);
 };
