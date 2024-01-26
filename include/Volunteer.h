@@ -5,8 +5,6 @@
 using std::string;
 using std::vector;
 
-#ifndef VOLUNTEER
-#define VOLUNTEER
 
 #define NO_ORDER -1
 
@@ -117,4 +115,3 @@ class LimitedDriverVolunteer: public DriverVolunteer {
         const int maxOrders; // The number of orders the volunteer can process in the whole simulation
         int ordersLeft; // The number of orders the volunteer can still take
 };
-#endif

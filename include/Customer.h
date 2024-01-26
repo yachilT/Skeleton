@@ -4,8 +4,6 @@
 using std::string;
 using std::vector;
 
-#ifndef CUSTOMER
-#define CUSTOMER
 class Customer {
     public:
         Customer(int id, const string &name, int locationDistance, int maxOrders);
@@ -51,4 +49,3 @@ class CivilianCustomer: public Customer {
         
 };
 
-#endif

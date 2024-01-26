@@ -5,8 +5,6 @@
 using std::string;
 using std::vector;
 
-#ifndef ORDER
-#define ORDER
 enum class OrderStatus {
     PENDING,
     COLLECTING,
@@ -42,5 +40,3 @@ class Order {
         int collectorId; //Initialized to NO_VOLUNTEER if no collector has been assigned yet
         int driverId; //Initialized to NO_VOLUNTEER if no driver has been assigned yet
 };
-
-#endif

@@ -5,8 +5,7 @@
 using std::string;
 using std::vector;
 
-#ifndef ACTION
-#define ACTION
+
 
 extern WareHouse* backup;
 
@@ -150,4 +149,3 @@ class RestoreWareHouse : public BaseAction {
     private:
 };
 
-#endif
