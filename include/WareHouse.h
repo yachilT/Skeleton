@@ -31,6 +31,7 @@ class WareHouse {
         Volunteer &getVolunteer(int volunteerId) const;
         Order &getOrder(int orderId) const;
         const vector<BaseAction*> &getActions() const;
+        void assignOrders();
         void close();
         void open();
         //Destructor
@@ -62,4 +63,5 @@ class WareHouse {
         void deleteVolunteers();
         void deleteCustomers();
         void deleteOrders();
+        void findAvailableCollector();
 };
