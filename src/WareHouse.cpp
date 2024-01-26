@@ -2,11 +2,12 @@
 
 WareHouse::WareHouse(const string &configFilePath)
 {
+    
 }
 
 void WareHouse::start()
 {
-
+    isOpen = true;
 }
 
 int WareHouse::getOrdersCounter() const
