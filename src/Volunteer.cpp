@@ -40,9 +40,15 @@ void CollectorVolunteer::step()
         activeOrderId = NO_ORDER;
     } 
 }
+
+
 int CollectorVolunteer::getCoolDown() const
 {
     return coolDown;
+}
+int CollectorVolunteer::getTimeLeft() const
+{
+    return timeLeft;
 }
 bool CollectorVolunteer::decreaseCoolDown()
 {
@@ -52,6 +58,11 @@ bool CollectorVolunteer::decreaseCoolDown()
 bool CollectorVolunteer::hasOrdersLeft() const
 {
     return true;
+}
+
+int CollectorVolunteer::getNumOrdersLeft() const
+{
+    return -1;
 }
 bool CollectorVolunteer::canTakeOrder(const Order &order) const
 {

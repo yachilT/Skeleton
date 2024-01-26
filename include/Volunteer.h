@@ -24,10 +24,12 @@ class Volunteer {
         virtual void acceptOrder(const Order &order) = 0; // Prepare for new order(Reset activeOrderId,TimeLeft,DistanceLeft,OrdersLeft depends on the volunteer type)
                 
         virtual void step() = 0; //Simulate volunteer step,if the volunteer finished the order, transfer activeOrderId to completedOrderId
-        
+        virtual int getTimeLeft() const = 0;
+        virtual int getNumOrdersLeft() = 0;
+
         virtual string toString() const = 0;
         virtual Volunteer* clone() const = 0; //Return a copy of the volunteer
-        virtual ~Volunteer();
+        virtual ~Volunteer() = 0;
     protected:
         int completedOrderId; //Initialized to NO_ORDER if no order has been completed yet
         int activeOrderId; //Initialized to NO_ORDER if no order is being processed
@@ -47,7 +49,7 @@ class CollectorVolunteer: public Volunteer {
         CollectorVolunteer *clone() const override;
         void step() override;
         int getCoolDown() const;
-        int getTimeLeft() const;
+        int getTimeLeft() const override;
         bool decreaseCoolDown();//Decrease timeLeft by 1,return true if timeLeft=0,false otherwise
         bool hasOrdersLeft() const override;
         bool canTakeOrder(const Order &order) const override;
