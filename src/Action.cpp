@@ -38,7 +38,7 @@ SimulateStep::SimulateStep(const SimulateStep &other): numOfSteps(other.numOfSte
 void SimulateStep::act(WareHouse &wareHouse)
 {
     wareHouse.addAction(this);
-    //TO DO Figure out what to do
+    
     complete();
 }
 
@@ -124,13 +124,18 @@ PrintOrderStatus::PrintOrderStatus(int id) : orderId(id) {}
 
 void PrintOrderStatus::act(WareHouse &wareHouse)
 {
-    Order &order = wareHouse.getOrder(orderId);
-    std::cout << "OrderId: " + std::to_string(order.getId()) 
-    + "\nOrderStatus: " + order.statusToString()
-    + "\nCustomerID: " + std::to_string(order.getCustomerId()) 
-    + "\nCollector: " + std::to_string(order.getCollectorId())
-    + "\nDriver: " + std::to_string(order.getDriverId())<< std::endl;
-    complete();
+    if (!wareHouse.isOrderExists(orderId))
+        error("Order doesn't exist");
+    else
+    {
+        Order &order = wareHouse.getOrder(orderId);
+        std::cout << "OrderId: " + std::to_string(order.getId()) 
+        + "\nOrderStatus: " + order.statusToString()
+        + "\nCustomerID: " + std::to_string(order.getCustomerId()) 
+        + "\nCollector: " + std::to_string(order.getCollectorId())
+        + "\nDriver: " + std::to_string(order.getDriverId())<< std::endl;
+        complete();
+    }
 }
 
 PrintOrderStatus *PrintOrderStatus::clone() const
@@ -147,17 +152,22 @@ PrintCustomerStatus::PrintCustomerStatus(int customerId): customerId(customerId)
 
 void PrintCustomerStatus::act(WareHouse &wareHouse)
 {
-    Customer &customer = wareHouse.getCustomer(customerId);
-    std::cout << "CustomerID: " + std::to_string(customer.getId()) << std::endl;
-    vector<int> orderIds = customer.getOrdersIds();
-    for (int id : orderIds)
+    if (!wareHouse.isCustomerExists(customerId))
+        error("Customer doesn't exist");
+    else
     {
-        Order order = wareHouse.getOrder(id);
-        std::cout << "OrderID: " + std::to_string(id)
-        + "\nOrderStatus: " + order.statusToString() << std::endl;
+        Customer &customer = wareHouse.getCustomer(customerId);
+        std::cout << "CustomerID: " + std::to_string(customer.getId()) << std::endl;
+        vector<int> orderIds = customer.getOrdersIds();
+        for (int id : orderIds)
+        {
+            Order order = wareHouse.getOrder(id);
+            std::cout << "OrderID: " + std::to_string(id)
+            + "\nOrderStatus: " + order.statusToString() << std::endl;
+        }
+        std::cout << "numOrdersLeft: " + std::to_string(customer.getMaxOrders() - customer.getNumOrders()) << std::endl; 
+        complete();
     }
-    std::cout << "numOrdersLeft: " + std::to_string(customer.getMaxOrders() - customer.getNumOrders()) << std::endl; 
-    complete();
 }
 
 PrintCustomerStatus *PrintCustomerStatus::clone() const
@@ -183,9 +193,11 @@ void PrintVolunteerStatus::act(WareHouse &wareHouse)
     {
         Volunteer &volunteer = wareHouse.getVolunteer(volunteerId);
         std::cout << "VolunteerID: " + std::to_string(volunteerId)
-        + "\nisBusy: " + std::to_string(volunteer.isBusy()) << std::endl;
-        //+ "\nTimeLeft: " + volunteer.isBusy() ? std::to_string(volunteer.get) : "" << std::endl;
-        //TO DO: Finish with methods from collector\driver regarding time
+        + "\nisBusy: " + std::to_string(volunteer.isBusy())
+        + "\nOrderID: " + (volunteer.isBusy() ? std::to_string(volunteer.getActiveOrderId()) : "None")
+        + "\nTimeLeft: " + (volunteer.getTimeLeft() == -1 ? "None" : std::to_string(volunteer.getTimeLeft()))
+        + "\nOrdersLeft: " + (volunteer.getNumOrdersLeft() == -1 ? "No Limit" : std::to_string(volunteer.getNumOrdersLeft())) << std::endl;
+        
 
         complete();
     }
