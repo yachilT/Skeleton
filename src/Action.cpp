@@ -205,95 +205,10 @@ void PrintVolunteerStatus::act(WareHouse &wareHouse)
 
 PrintVolunteerStatus *PrintVolunteerStatus::clone() const
 {
-    return new PrintVolunteerStatus(*this);
+    return nullptr;
 }
 
 string PrintVolunteerStatus::toString() const
 {
-    return "printVolunteerStatus " + std::to_string(volunteerId) + " " + getStatusToString();
-}
-
-PrintActionsLog::PrintActionsLog() {}
-
-void PrintActionsLog::act(WareHouse &wareHouse)
-{
-    wareHouse.addAction(this);
-    vector<BaseAction*> actions = wareHouse.getActions();
-    for(BaseAction* action : actions)
-    {
-        std::cout << action << std::endl;
-    }
-    complete(); 
-}
-
-PrintActionsLog *PrintActionsLog::clone() const
-{
-    return new PrintActionsLog(*this);
-}
-
-string PrintActionsLog::toString() const
-{
-    return "printActionLog " + getStatusToString();
-}
-
-Close::Close() {}
-
-void Close::act(WareHouse &wareHouse)
-{
-    wareHouse.addAction(this);
-    wareHouse.close();
-    complete();
-}
-
-Close *Close::clone() const
-{
-    return new Close(*this);
-}
-
-string Close::toString() const
-{
-    return "Close " + getStatusToString();
-}
-
-BackupWareHouse::BackupWareHouse() {}
-
-void BackupWareHouse::act(WareHouse &wareHouse)
-{
-    wareHouse.addAction(this);
-    backup = new WareHouse(wareHouse);
-    complete();
-}
-
-BackupWareHouse *BackupWareHouse::clone() const
-{
-    return new BackupWareHouse(*this);
-}
-
-string BackupWareHouse::toString() const
-{
-    return "backupWareHouse " + getStatusToString();
-}
-
-RestoreWareHouse::RestoreWareHouse() {}
-
-void RestoreWareHouse::act(WareHouse &wareHouse)
-{
-    wareHouse.addAction(this);
-    if (backup == nullptr)
-        error("No backup available");
-    else
-    {
-        wareHouse = *backup;
-        complete();
-    }
-}
-
-RestoreWareHouse *RestoreWareHouse::clone() const
-{
-    return new RestoreWareHouse(*this);
-}
-
-string RestoreWareHouse::toString() const
-{
-    return "restoreWareHouse " + getStatusToString();
+    return string();
 }
