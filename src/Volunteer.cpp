@@ -64,6 +64,7 @@ int CollectorVolunteer::getNumOrdersLeft() const
 {
     return -1;
 }
+
 bool CollectorVolunteer::canTakeOrder(const Order &order) const
 {
     return !isBusy();
@@ -130,6 +131,16 @@ DriverVolunteer *DriverVolunteer::clone() const
 int DriverVolunteer::getDistanceLeft() const
 {
     return distanceLeft;
+}
+
+int DriverVolunteer::getTimeLeft() const
+{
+    return distanceLeft / distancePerStep;
+}
+
+int DriverVolunteer::getNumOrdersLeft() const
+{
+    return -1;
 }
 
 int DriverVolunteer::getMaxDistance() const
