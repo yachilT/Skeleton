@@ -34,6 +34,7 @@ class WareHouse {
         void assignOrders();
         void advanceTime();
         void pushOrders();
+        void fireVolunteers();
         void close();
         void open();
         //Destructor
@@ -68,5 +69,6 @@ class WareHouse {
         void addVolunteer(Volunteer *volunteer);
         CollectorVolunteer* findAvailableCollector(Order &order);
         DriverVolunteer* findAvailableDriver(Order &order);
+        Order *removeCompletedOrder(int id);
         std::vector<std::string> WareHouse::splitString(const std::string& input, char delimiter);
 };

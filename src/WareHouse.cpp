@@ -208,6 +208,7 @@ void WareHouse::assignOrders()
                     inProcessOrders.push_back(order);
                     order->setStatus(OrderStatus::COLLECTING);
                 }
+                break;
             case OrderStatus::COLLECTING:
                 DriverVolunteer *driver = findAvailableDriver(*order);
                 if (driver != nullptr)
@@ -217,7 +218,9 @@ void WareHouse::assignOrders()
                     inProcessOrders.push_back(order);
                     order->setStatus(OrderStatus::DELIVERING);
                 }
+                break;
         }
+
     }
 }
 
@@ -231,9 +234,35 @@ void WareHouse::advanceTime()
 
 void WareHouse::pushOrders()
 {
-    for (auto iter = inProcessOrders.begin(); iter < inProcessOrders.end(); iter++)
+    for (auto iter = volunteers.begin(); iter < volunteers.end(); iter++)
     {
-        Order *order = *iter;
+
+        Volunteer *volunteer = *iter;
+        if (volunteer->hasCompleted())
+        {
+            Order *completedOrder = removeCompletedOrder(volunteer->getCompletedOrderId());
+            volunteer->passOrder();
+            if (completedOrder->getStatus() == OrderStatus::COLLECTING)
+                pendingOrders.push_back(completedOrder);
+            else if(completedOrder->getStatus() == OrderStatus::DELIVERING)
+            {
+                completedOrders.push_back(completedOrder);
+                completedOrder->setStatus(OrderStatus::COMPLETED);
+            }
+        }
+    }
+}
+
+void WareHouse::fireVolunteers()
+{
+    for (auto iter = volunteers.begin(); iter < volunteers.end(); iter++) 
+    {
+        Volunteer *volunteer = *iter;
+        if (!volunteer->hasOrdersLeft())
+        {
+            volunteers.erase(iter--);
+            delete volunteer;
+        }
     }
 }
 
@@ -455,6 +484,20 @@ DriverVolunteer *WareHouse::findAvailableDriver(Order &order)
             return dynamic_cast<DriverVolunteer*>(volunteer);
     }
     return nullptr;
+}
+
+Order *WareHouse::removeCompletedOrder(int id)
+{
+    auto iter = inProcessOrders.begin();
+    while (iter < inProcessOrders.end() && (**iter).getId() == id)
+    {
+        iter++;
+    }
+    Order *order = nullptr;
+    if (iter != inProcessOrders.end())
+        order = *iter;
+    return order;
+
 }
 
 std::vector<std::string> WareHouse::splitString(const std::string& input, char delimiter) {
