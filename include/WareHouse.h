@@ -67,4 +67,6 @@ class WareHouse {
         void deleteOrders();
         CollectorVolunteer* findAvailableCollector(Order &order);
         DriverVolunteer* findAvailableDriver(Order &order);
+
+        Order *removeCompletedOrder(int id);
 };

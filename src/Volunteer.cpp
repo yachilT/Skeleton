@@ -20,8 +20,12 @@ int Volunteer::getCompletedOrderId() const
 }
 bool Volunteer::isBusy() const
 {
-    return activeOrderId == NO_ORDER;
+    return activeOrderId == NO_ORDER && completedOrderId == NO_ORDER;
 };
+bool Volunteer::hasCompleted() const
+{
+    return activeOrderId == NO_ORDER && completedOrderId != NO_ORDER;
+}
 
 //CollectorVolunteer:
 
