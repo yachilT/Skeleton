@@ -128,7 +128,8 @@ void WareHouse::assignOrders()
     for(auto iter = pendingOrders.begin(); iter < pendingOrders.end(); iter++)
     {
         Order* order = *iter;
-        switch(order->getStatus())
+        OrderStatus status = order->getStatus();
+        switch(status)
         {
             case OrderStatus::PENDING:
                 CollectorVolunteer *collector = findAvailableCollector(*order);
@@ -162,9 +163,9 @@ void WareHouse::advanceTime()
 
 void WareHouse::pushOrders()
 {
-    for (auto iter = inProcessOrders.begin(); iter < inProcessOrders.end(); iter++)
+    for (auto iter = volunteers.begin(); iter < volunteers.end(); iter++)
     {
-        Order *order = *iter;
+        Volunteer *Volunteer = *iter;
     }
 }
 
