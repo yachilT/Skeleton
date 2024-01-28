@@ -65,8 +65,9 @@ class WareHouse {
         void deleteVolunteers();
         void deleteCustomers();
         void deleteOrders();
+        void addVolunteer(Volunteer *volunteer);
         CollectorVolunteer* findAvailableCollector(Order &order);
         DriverVolunteer* findAvailableDriver(Order &order);
-
         Order *removeCompletedOrder(int id);
+        std::vector<std::string> WareHouse::splitString(const std::string& input, char delimiter);
 };
