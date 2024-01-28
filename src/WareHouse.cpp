@@ -33,8 +33,8 @@ void WareHouse::start()
     isOpen = true;
     while(isOpen)
     {
-        std::string line;
-        std::getline(std::cin, line);
+        string line;
+        getline(std::cin, line);
         if(line == "close")
         {
             BaseAction *action = new Close();
@@ -43,7 +43,7 @@ void WareHouse::start()
             
         else
         {
-            vector<std::string> splitBySpace = splitString(line,' ');
+            vector<string> splitBySpace = splitString(line,' ');
             if(splitBySpace[0] == "order")
             {
                 BaseAction *action =  new AddOrder(std::stoi(splitBySpace[1]));
