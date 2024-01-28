@@ -31,6 +31,24 @@ customers(), pendingOrders(), inProcessOrders(), completedOrders()
 void WareHouse::start()
 {
     isOpen = true;
+    while(isOpen)
+    {
+        std::string line;
+        std::getline(std::cin, line);
+        if(line == "close")
+            WareHouse::close();
+        else
+        {
+            vector<std::string> splitBySpace = splitString(line,' ');
+            if(splitBySpace[0] == "order")
+            {
+              BaseAction *order =  new AddOrder(std::stoi(splitBySpace[1]));
+              order->act(*this);
+              if(order->getStatus() == ActionStatus::ERROR)
+                std::cout<< "Error: Cannot place this order"<<std::endl;
+            }
+        }
+    }
 }
 
 int WareHouse::getOrdersCounter() const
