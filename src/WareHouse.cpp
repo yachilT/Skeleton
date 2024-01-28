@@ -1,8 +1,31 @@
 #include "WareHouse.h"
 
-WareHouse::WareHouse(const string &configFilePath)
+WareHouse::WareHouse(const string &configFilePath): isOpen(false), customerCounter(0), volunteerCounter(0), ordersCounter(0), actionsLog(),volunteers(),
+customers(), pendingOrders(), inProcessOrders(), completedOrders()
+
 {
-    
+    vector<std::string> splitByRow = WareHouse::splitString(configFilePath, '\n');
+    for(std::string row : splitByRow)
+    {
+        vector<std::string> splitBySpace = WareHouse::splitString(row, ' ');
+        if(splitBySpace[0] == "customer")
+        {
+            BaseAction* action = new AddCustomer(splitBySpace[1], splitBySpace[2], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]));
+            action->act(*this);
+        }
+        else if (splitBySpace[0] == "volunteer")
+        {
+            if(splitBySpace[2] == "collector")
+                addVolunteer(new CollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3])));
+            else if(splitBySpace[2] == "limited_collector")
+                addVolunteer(new LimitedCollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));
+            else if(splitBySpace[2] == "driver")
+                addVolunteer(new DriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));    
+            else 
+                addVolunteer(new LimitedDriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]), std::stoi(splitBySpace[5])));   
+        }
+        
+    }
 }
 
 void WareHouse::start()
@@ -128,8 +151,7 @@ void WareHouse::assignOrders()
     for(auto iter = pendingOrders.begin(); iter < pendingOrders.end(); iter++)
     {
         Order* order = *iter;
-        OrderStatus status = order->getStatus();
-        switch(status)
+        switch(order->getStatus())
         {
             case OrderStatus::PENDING:
                 CollectorVolunteer *collector = findAvailableCollector(*order);
@@ -163,9 +185,9 @@ void WareHouse::advanceTime()
 
 void WareHouse::pushOrders()
 {
-    for (auto iter = volunteers.begin(); iter < volunteers.end(); iter++)
+    for (auto iter = inProcessOrders.begin(); iter < inProcessOrders.end(); iter++)
     {
-        Volunteer *Volunteer = *iter;
+        Order *order = *iter;
     }
 }
 
@@ -401,11 +423,14 @@ std::vector<std::string> WareHouse::splitString(const std::string& input, char d
             token.clear();
         }
     }
-
-    // Add the last token if the input doesn't end with the delimiter
     if (!token.empty()) {
         result.push_back(token);
     }
 
     return result;
+}
+
+void WareHouse::addVolunteer(Volunteer* volunteer){
+    volunteers.push_back(volunteer);
+    volunteerCounter += 1;
 }
