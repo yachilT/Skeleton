@@ -38,11 +38,13 @@ SimulateStep::SimulateStep(const SimulateStep &other): numOfSteps(other.numOfSte
 void SimulateStep::act(WareHouse &wareHouse)
 {
     wareHouse.addAction(this);
-
-    wareHouse.assignOrders();
-    wareHouse.advanceTime();
-    wareHouse.pushOrders();
-    wareHouse.fireVolunteers();
+    for (int i = 0; i < numOfSteps; i++)
+    {
+        wareHouse.assignOrders();
+        wareHouse.advanceTime();
+        wareHouse.pushOrders();
+        wareHouse.fireVolunteers();
+    }
     
     complete();
 }
