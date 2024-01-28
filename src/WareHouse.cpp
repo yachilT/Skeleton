@@ -197,29 +197,29 @@ void WareHouse::assignOrders()
     for(auto iter = pendingOrders.begin(); iter < pendingOrders.end(); iter++)
     {
         Order* order = *iter;
-        switch(order->getStatus())
+        if (order->getStatus() == OrderStatus::PENDING)
         {
-            case OrderStatus::PENDING:
-                CollectorVolunteer *collector = findAvailableCollector(*order);
-                if (collector != nullptr)
-                {
-                    collector->acceptOrder(*order);
-                    pendingOrders.erase(iter--);
-                    inProcessOrders.push_back(order);
-                    order->setStatus(OrderStatus::COLLECTING);
-                }
-                break;
-            case OrderStatus::COLLECTING:
-                DriverVolunteer *driver = findAvailableDriver(*order);
-                if (driver != nullptr)
-                {
-                    driver->acceptOrder(*order);
-                    pendingOrders.erase(iter--);
-                    inProcessOrders.push_back(order);
-                    order->setStatus(OrderStatus::DELIVERING);
-                }
-                break;
+            CollectorVolunteer *collector = findAvailableCollector(*order);
+            if (collector != nullptr)
+            {
+                collector->acceptOrder(*order);
+                pendingOrders.erase(iter--);
+                inProcessOrders.push_back(order);
+                order->setStatus(OrderStatus::COLLECTING);
+            }
         }
+        else if (order->getStatus() == OrderStatus::COLLECTING)
+        {
+            DriverVolunteer *driver = findAvailableDriver(*order);
+            if (driver != nullptr)
+            {
+                driver->acceptOrder(*order);
+                pendingOrders.erase(iter--);
+                inProcessOrders.push_back(order);
+                order->setStatus(OrderStatus::DELIVERING);
+            }
+        }
+        
 
     }
 }
@@ -500,9 +500,9 @@ Order *WareHouse::removeCompletedOrder(int id)
 
 }
 
-std::vector<std::string> WareHouse::splitString(const std::string& input, char delimiter) {
-    std::vector<std::string> result;
-    std::string token;
+vector<string> WareHouse::splitString(const string& input, char delimiter) {
+    vector<string> result;
+    string token;
 
     for (char ch : input) {
         if (ch != delimiter) {
@@ -517,9 +517,4 @@ std::vector<std::string> WareHouse::splitString(const std::string& input, char d
     }
 
     return result;
-}
-
-void WareHouse::addVolunteer(Volunteer* volunteer){
-    volunteers.push_back(volunteer);
-    volunteerCounter += 1;
 }
