@@ -18,6 +18,12 @@ int Volunteer::getCompletedOrderId() const
 {
     return completedOrderId;
 }
+
+void Volunteer::passOrder()
+{
+    completedOrderId = NO_ORDER;
+}
+
 bool Volunteer::isBusy() const
 {
     return activeOrderId == NO_ORDER && completedOrderId == NO_ORDER;
@@ -237,4 +243,6 @@ string LimitedDriverVolunteer::toString() const
     + "\nOrderID: " + (activeOrderId == -1 ? "None" : std::to_string(activeOrderId))
     + "\nTimeLeft: " + std::to_string(this->getDistanceLeft())
     + "\nOrdersLeft: " + std::to_string(ordersLeft);
-} 
+}
+
+

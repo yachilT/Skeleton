@@ -34,6 +34,7 @@ class WareHouse {
         void assignOrders();
         void advanceTime();
         void pushOrders();
+        void fireVolunteers();
         void close();
         void open();
         //Destructor

@@ -213,6 +213,27 @@ void WareHouse::pushOrders()
         if (volunteer->hasCompleted())
         {
             Order *completedOrder = removeCompletedOrder(volunteer->getCompletedOrderId());
+            volunteer->passOrder();
+            if (completedOrder->getStatus() == OrderStatus::COLLECTING)
+                pendingOrders.push_back(completedOrder);
+            else if(completedOrder->getStatus() == OrderStatus::DELIVERING)
+            {
+                completedOrders.push_back(completedOrder);
+                completedOrder->setStatus(OrderStatus::COMPLETED);
+            }
+        }
+    }
+}
+
+void WareHouse::fireVolunteers()
+{
+    for (auto iter = volunteers.begin(); iter < volunteers.end(); iter++) 
+    {
+        Volunteer *volunteer = *iter;
+        if (!volunteer->hasOrdersLeft())
+        {
+            volunteers.erase(iter--);
+            delete volunteer;
         }
     }
 }
