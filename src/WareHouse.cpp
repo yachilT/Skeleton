@@ -36,17 +36,45 @@ void WareHouse::start()
         std::string line;
         std::getline(std::cin, line);
         if(line == "close")
-            WareHouse::close();
+        {
+            BaseAction *action = new Close();
+            action->act(*this);
+        }
+            
         else
         {
             vector<std::string> splitBySpace = splitString(line,' ');
             if(splitBySpace[0] == "order")
             {
-              BaseAction *order =  new AddOrder(std::stoi(splitBySpace[1]));
-              order->act(*this);
-              if(order->getStatus() == ActionStatus::ERROR)
-                std::cout<< "Error: Cannot place this order"<<std::endl;
+                BaseAction *action =  new AddOrder(std::stoi(splitBySpace[1]));
+                action->act(*this);
             }
+            else if(splitBySpace[0] == "orderStatus")
+            {
+                BaseAction *action = new PrintOrderStatus(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "step")
+            {
+                BaseAction *action = new SimulateStep(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "volunteerStatus")
+            {
+                BaseAction *action = new PrintVolunteerStatus(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "customerStatus")
+            {
+                BaseAction *action = new PrintCustomerStatus(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "log")
+            {
+                BaseAction *action = new PrintActionsLog();
+                action->act(*this);
+            }
+
         }
     }
 }
