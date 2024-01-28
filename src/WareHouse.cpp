@@ -149,7 +149,6 @@ void WareHouse::assignOrders()
                     order->setStatus(OrderStatus::DELIVERING);
                 }
         }
-
     }
 }
 
