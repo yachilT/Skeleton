@@ -4,8 +4,7 @@
 #include <iostream>
 #include "Order.h"
 #include "Customer.h"
-
-class BaseAction; 
+class BaseAction;
 #include "Action.h" 
 #include "Volunteer.h"
 

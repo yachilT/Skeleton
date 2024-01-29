@@ -1,11 +1,12 @@
 #include "WareHouse.h"
+#include <fstream>
 
 WareHouse::WareHouse(const string &configFilePath): isOpen(false), customerCounter(0), volunteerCounter(0), ordersCounter(0), actionsLog(),volunteers(),
 customers(), pendingOrders(), inProcessOrders(), completedOrders()
-
 {
-    vector<std::string> splitByRow = WareHouse::splitString(configFilePath, '\n');
-    for(std::string row : splitByRow)
+    std::ifstream file(configFilePath,std::ios::in);
+    std::string row;
+    while(getline(file,row))
     {
         vector<std::string> splitBySpace = WareHouse::splitString(row, ' ');
         if(splitBySpace[0] == "customer")
@@ -31,9 +32,12 @@ customers(), pendingOrders(), inProcessOrders(), completedOrders()
 void WareHouse::start()
 {
     isOpen = true;
+    std::cout<<"Warehouse is open!"<<std::endl;
     while(isOpen)
     {
         string line;
+
+
         getline(std::cin, line);
         if(line == "close")
         {
@@ -202,6 +206,7 @@ void WareHouse::assignOrders()
             CollectorVolunteer *collector = findAvailableCollector(*order);
             if (collector != nullptr)
             {
+                order->setCollectorId(collector->getId());
                 collector->acceptOrder(*order);
                 pendingOrders.erase(iter--);
                 inProcessOrders.push_back(order);
@@ -213,6 +218,7 @@ void WareHouse::assignOrders()
             DriverVolunteer *driver = findAvailableDriver(*order);
             if (driver != nullptr)
             {
+                order->setDriverId(driver->getId());
                 driver->acceptOrder(*order);
                 pendingOrders.erase(iter--);
                 inProcessOrders.push_back(order);
@@ -268,9 +274,25 @@ void WareHouse::fireVolunteers()
 
 void WareHouse::close()
 {
-    for(BaseAction* action: actionsLog)
+    for(Order* order: pendingOrders)
     {
-        std::cout<< action->toString()<<std::endl;
+        std::cout << "OrderID: " + std::to_string(order->getId())
+        + ", CustomerID: " + std::to_string(order->getCustomerId()) 
+        + ", OrderStatus: " + order->statusToString()<< std::endl;
+    }
+
+    for (Order *order : inProcessOrders)
+    {
+        std::cout << "OrderID: " + std::to_string(order->getId())
+        + ", CustomerID: " + std::to_string(order->getCustomerId()) 
+        + ", OrderStatus: " + order->statusToString()<< std::endl;
+    }
+
+    for (Order *order : completedOrders)
+    {
+        std::cout << "OrderID: " + std::to_string(order->getId())
+        + ", CustomerID: " + std::to_string(order->getCustomerId()) 
+        + ", OrderStatus: " + order->statusToString()<< std::endl;
     }
     isOpen = false;
 }   
@@ -470,8 +492,11 @@ CollectorVolunteer* WareHouse::findAvailableCollector(Order &order)
 {
     for(Volunteer *volunteer : volunteers)
     {
-        if (!volunteer->isBusy() & !volunteer->canTakeOrder(order)& dynamic_cast<CollectorVolunteer*>(volunteer) != nullptr)
+        if (volunteer->canTakeOrder(order) & dynamic_cast<CollectorVolunteer*>(volunteer) != nullptr)
+        {
             return dynamic_cast<CollectorVolunteer*>(volunteer);
+        }
+        
     }
     return nullptr;
 }
@@ -480,7 +505,7 @@ DriverVolunteer *WareHouse::findAvailableDriver(Order &order)
 {
     for(Volunteer *volunteer : volunteers)
     {
-        if (!volunteer->isBusy() & !volunteer->canTakeOrder(order)& dynamic_cast<DriverVolunteer*>(volunteer) != nullptr)
+        if (volunteer->canTakeOrder(order)& dynamic_cast<DriverVolunteer*>(volunteer) != nullptr)
             return dynamic_cast<DriverVolunteer*>(volunteer);
     }
     return nullptr;
@@ -489,13 +514,18 @@ DriverVolunteer *WareHouse::findAvailableDriver(Order &order)
 Order *WareHouse::removeCompletedOrder(int id)
 {
     auto iter = inProcessOrders.begin();
-    while (iter < inProcessOrders.end() && (**iter).getId() == id)
+    Order *order = *iter;
+    while (iter < inProcessOrders.end() && order->getId() != id)
     {
         iter++;
-    }
-    Order *order = nullptr;
-    if (iter != inProcessOrders.end())
         order = *iter;
+    }
+    order = nullptr;
+    if (iter != inProcessOrders.end()) 
+    {
+        order = *iter;
+        inProcessOrders.erase(iter);
+    }
     return order;
 
 }

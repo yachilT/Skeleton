@@ -1,5 +1,7 @@
 #include "Action.h"
 
+BaseAction::BaseAction() : errorMsg(), status(ActionStatus::COMPLETED) {}
+
 ActionStatus BaseAction::getStatus() const
 {
     return status;
@@ -14,6 +16,7 @@ void BaseAction::error(string errorMsg)
 {
     status = ActionStatus::ERROR;
     this->errorMsg = errorMsg;
+    std::cout << "Error: " + errorMsg << std::endl;
 }
 
 string BaseAction::getErrorMsg() const
@@ -138,7 +141,9 @@ void PrintOrderStatus::act(WareHouse &wareHouse)
         Order &order = wareHouse.getOrder(orderId);
         std::cout << order.toString() << std::endl;
         complete();
+        
     }
+    wareHouse.addAction(this);
 }
 
 PrintOrderStatus *PrintOrderStatus::clone() const
@@ -148,7 +153,7 @@ PrintOrderStatus *PrintOrderStatus::clone() const
 
 string PrintOrderStatus::toString() const
 {
-    return "printOrderStatus " + std::to_string(orderId) + getStatusToString();
+    return "orderStatus " + std::to_string(orderId) + " " + getStatusToString();
 }
 
 PrintCustomerStatus::PrintCustomerStatus(int customerId): customerId(customerId) {}
@@ -171,6 +176,7 @@ void PrintCustomerStatus::act(WareHouse &wareHouse)
         std::cout << "numOrdersLeft: " + std::to_string(customer.getMaxOrders() - customer.getNumOrders()) << std::endl; 
         complete();
     }
+    wareHouse.addAction(this);
 }
 
 PrintCustomerStatus *PrintCustomerStatus::clone() const
@@ -180,14 +186,13 @@ PrintCustomerStatus *PrintCustomerStatus::clone() const
 
 string PrintCustomerStatus::toString() const
 {
-    return "printCustomerStatus: " + std::to_string(customerId) + " " + getStatusToString();
+    return "customerStatus: " + std::to_string(customerId) + " " + getStatusToString();
 }
 
 PrintVolunteerStatus::PrintVolunteerStatus(int id) : volunteerId(id) {}
 
 void PrintVolunteerStatus::act(WareHouse &wareHouse) 
 {
-    wareHouse.addAction(this);
     if (!wareHouse.isVolunteerExists(volunteerId))
     {
         error("Volunteer doesn't exist");
@@ -195,9 +200,10 @@ void PrintVolunteerStatus::act(WareHouse &wareHouse)
     else
     {
         Volunteer &volunteer = wareHouse.getVolunteer(volunteerId);
-        std::cout << volunteer.toString();
+        std::cout << volunteer.toString() << std::endl;
         complete();
     }
+    wareHouse.addAction(this);
 }
 
 PrintVolunteerStatus *PrintVolunteerStatus::clone() const
@@ -207,5 +213,86 @@ PrintVolunteerStatus *PrintVolunteerStatus::clone() const
 
 string PrintVolunteerStatus::toString() const
 {
-    return "printVolunteerStatus " + std::to_string(volunteerId) + " " + getStatusToString();
+    return "volunteerStatus " + std::to_string(volunteerId) + " " + getStatusToString();
+}
+
+PrintActionsLog::PrintActionsLog() {}
+
+void PrintActionsLog::act(WareHouse &wareHouse)
+{
+    for (BaseAction *baseAction : wareHouse.getActions()) 
+    {
+        std::cout << baseAction->toString() << std::endl;
+    }
+    complete();
+    wareHouse.addAction(this);
+}
+
+PrintActionsLog *PrintActionsLog::clone() const
+{
+    return new PrintActionsLog(*this);
+}
+
+string PrintActionsLog::toString() const
+{
+    return "log " + getStatusToString();
+}
+
+Close::Close() {}
+
+void Close::act(WareHouse &wareHouse)
+{
+    wareHouse.close();
+    complete();
+    wareHouse.addAction(this);
+}
+
+Close *Close::clone() const
+{
+    return new Close(*this);
+}
+
+string Close::toString() const
+{
+    return "close " + getStatusToString();
+}
+
+BackupWareHouse::BackupWareHouse() {}
+
+void BackupWareHouse::act(WareHouse &wareHouse)
+{
+    wareHouse.addAction(this);
+    backup = new WareHouse(wareHouse);
+    complete();
+}
+
+BackupWareHouse *BackupWareHouse::clone() const
+{
+    return new BackupWareHouse(*this);
+}
+
+string BackupWareHouse::toString() const
+{
+    return "backupWareHouse";
+}
+
+RestoreWareHouse::RestoreWareHouse() {}
+
+void RestoreWareHouse::act(WareHouse &wareHouse)
+{
+    wareHouse.addAction(this);
+    if (backup == nullptr)
+        error("No backup available");
+    else
+        complete();
+}
+
+RestoreWareHouse *RestoreWareHouse::clone() const
+{
+    return new RestoreWareHouse(*this);
+}
+
+string RestoreWareHouse::toString() const
+{
+    return "restoreWareHouse " + getStatusToString();
 }
