@@ -69,4 +69,5 @@ class WareHouse {
         DriverVolunteer* findAvailableDriver(Order &order);
         Order *removeCompletedOrder(int id);
         vector<string> splitString(const string& input, char delimiter);
+        string WareHouse::subStringByChar(const string & input, char c);
 };

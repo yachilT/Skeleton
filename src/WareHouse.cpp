@@ -8,24 +8,27 @@ customers(), pendingOrders(), inProcessOrders(), completedOrders()
     std::string row;
     while(getline(file,row))
     {
-        vector<std::string> splitBySpace = WareHouse::splitString(row, ' ');
-        if(splitBySpace[0] == "customer")
+        row = WareHouse::subStringByChar(row,'#');
+        if(row != "")
         {
-            BaseAction* action = new AddCustomer(splitBySpace[1], splitBySpace[2], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]));
-            action->act(*this);
+            vector<std::string> splitBySpace = WareHouse::splitString(row, ' ');
+            if(splitBySpace[0] == "customer")
+            {
+                BaseAction* action = new AddCustomer(splitBySpace[1], splitBySpace[2], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]));
+                action->act(*this);
+            }
+            else if (splitBySpace[0] == "volunteer")
+            {
+                if(splitBySpace[2] == "collector")
+                    addVolunteer(new CollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3])));
+                else if(splitBySpace[2] == "limited_collector")
+                    addVolunteer(new LimitedCollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));
+                else if(splitBySpace[2] == "driver")
+                    addVolunteer(new DriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));    
+                else 
+                    addVolunteer(new LimitedDriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]), std::stoi(splitBySpace[5])));   
+            }
         }
-        else if (splitBySpace[0] == "volunteer")
-        {
-            if(splitBySpace[2] == "collector")
-                addVolunteer(new CollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3])));
-            else if(splitBySpace[2] == "limited_collector")
-                addVolunteer(new LimitedCollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));
-            else if(splitBySpace[2] == "driver")
-                addVolunteer(new DriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));    
-            else 
-                addVolunteer(new LimitedDriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]), std::stoi(splitBySpace[5])));   
-        }
-        
     }
 }
 
@@ -546,5 +549,15 @@ vector<string> WareHouse::splitString(const string& input, char delimiter) {
         result.push_back(token);
     }
 
+    return result;
+}
+string WareHouse::subStringByChar(const string & input, char c){
+    string result;
+    for(char ch: input)
+    {
+        if(ch == c)
+            break;
+        result += ch;
+    }
     return result;
 }
