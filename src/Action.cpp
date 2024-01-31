@@ -256,6 +256,8 @@ BackupWareHouse::BackupWareHouse() {}
 
 void BackupWareHouse::act(WareHouse &wareHouse)
 {
+    if(backup != nullptr)
+        delete backup;
     backup = new WareHouse(wareHouse);
     complete();
     wareHouse.addAction(this);
