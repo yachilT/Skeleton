@@ -1,7 +1,7 @@
 #include "Volunteer.h"
 //Volunteer:
-Volunteer::Volunteer(int id, const string &name): id(id),name(name), completedOrderId(NO_ORDER), activeOrderId(NO_ORDER) {}
-Volunteer::Volunteer(const Volunteer& other): id(other.id), name(other.name), completedOrderId(other.completedOrderId), activeOrderId(other.activeOrderId) {}
+Volunteer::Volunteer(int id, const string &name): completedOrderId(NO_ORDER), activeOrderId(NO_ORDER), id(id), name(name)  {}
+Volunteer::Volunteer(const Volunteer& other): completedOrderId(other.completedOrderId), activeOrderId(other.activeOrderId), id(other.id), name(other.name) {}
 int Volunteer::getId() const
 {
     return id;

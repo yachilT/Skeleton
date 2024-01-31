@@ -1,8 +1,8 @@
 #include "WareHouse.h"
 #include <fstream>
 
-WareHouse::WareHouse(const string &configFilePath): isOpen(false), customerCounter(0), volunteerCounter(0), ordersCounter(0), actionsLog(),volunteers(),
-customers(), pendingOrders(), inProcessOrders(), completedOrders()
+WareHouse::WareHouse(const string &configFilePath): isOpen(false), actionsLog(), volunteers(), pendingOrders(), inProcessOrders(), completedOrders(), customers(), 
+customerCounter(0), volunteerCounter(0), ordersCounter(0)
 {
     std::ifstream file(configFilePath,std::ios::in);
     std::string row;
@@ -181,6 +181,9 @@ Customer &WareHouse::getCustomer(int customerId) const
             return *c;
     }
 
+    static CivilianCustomer c = CivilianCustomer(-1, "", -1, -1);
+    return c;
+
 }
 
 Volunteer &WareHouse::getVolunteer(int volunteerId) const
@@ -190,6 +193,9 @@ Volunteer &WareHouse::getVolunteer(int volunteerId) const
         if(v->getId() == volunteerId)
             return *v;
     }
+
+    static CollectorVolunteer v = CollectorVolunteer(-1, "", -1);
+    return v;
 }
 
 Order &WareHouse::getOrder(int orderId) const
@@ -209,6 +215,8 @@ Order &WareHouse::getOrder(int orderId) const
             if(o->getId() == orderId)
                 return *o;
     }  
+    static Order o = Order(-1, -1, -1);
+    return o;
 }
 
 
@@ -332,7 +340,8 @@ WareHouse::~WareHouse()
     deleteOrders();
 }
 
-WareHouse::WareHouse(const WareHouse &other): isOpen(other.isOpen), customerCounter(other.customerCounter), volunteerCounter(other.volunteerCounter), ordersCounter(other.ordersCounter) 
+WareHouse::WareHouse(const WareHouse &other): isOpen(other.isOpen), actionsLog(), volunteers(), pendingOrders(), inProcessOrders(), completedOrders(), customers(),
+ customerCounter(other.customerCounter), volunteerCounter(other.volunteerCounter), ordersCounter(other.ordersCounter) 
 {
     for(BaseAction *action: other.actionsLog)
         actionsLog.push_back(action->clone());
@@ -384,28 +393,29 @@ WareHouse &WareHouse::operator=(const WareHouse& other)
         for(Order *order: other.completedOrders)
             completedOrders.push_back(order->clone());
     }
+    return *this;
 }
 
 WareHouse::WareHouse(WareHouse&& other) noexcept: isOpen(other.isOpen), actionsLog(other.actionsLog), volunteers(other.volunteers),
 pendingOrders(other.pendingOrders), inProcessOrders(other.inProcessOrders), completedOrders(other.completedOrders), customers(other.customers),
 customerCounter(other.customerCounter), volunteerCounter(other.volunteerCounter), ordersCounter(other.ordersCounter)
 {
-    for (int i = 0; i < other.actionsLog.size(); i++)
+    for (size_t i = 0; i < other.actionsLog.size(); i++)
         other.actionsLog[i] = nullptr;
 
-    for (int i = 0; i < other.volunteers.size(); i++)
+    for (size_t i = 0; i < other.volunteers.size(); i++)
         other.volunteers[i] = nullptr;
 
-    for (int i = 0; i < other.customers.size(); i++)
+    for (size_t i = 0; i < other.customers.size(); i++)
         other.customers[i] = nullptr;
 
-    for (int i = 0; i < other.pendingOrders.size(); i++)
+    for (size_t i = 0; i < other.pendingOrders.size(); i++)
         other.pendingOrders[i] = nullptr;
 
-    for (int i = 0; i < other.inProcessOrders.size(); i++)
+    for (size_t i = 0; i < other.inProcessOrders.size(); i++)
         other.inProcessOrders[i] = nullptr;
 
-    for (int i = 0; i < other.completedOrders.size(); i++)
+    for (size_t i = 0; i < other.completedOrders.size(); i++)
         other.completedOrders[i] = nullptr;
 }
 
@@ -417,32 +427,32 @@ WareHouse &WareHouse::operator=(WareHouse &&other) noexcept
         deleteCustomers();
         deleteVolunteers();
         deleteOrders();
-        for (int i = 0; i < other.actionsLog.size(); i++)
+        for (size_t i = 0; i < other.actionsLog.size(); i++)
         {   
             actionsLog.push_back(other.actionsLog[i]);
             other.actionsLog[i] = nullptr;
         }
-        for (int i = 0; i < other.customers.size(); i++)
+        for (size_t i = 0; i < other.customers.size(); i++)
         {   
             customers.push_back(other.customers[i]);
             other.customers[i] = nullptr;
         }
-        for (int i = 0; i < other.volunteers.size(); i++)
+        for (size_t i = 0; i < other.volunteers.size(); i++)
         {   
             volunteers.push_back(other.volunteers[i]);
             other.volunteers[i] = nullptr;
         }
-        for (int i = 0; i < other.pendingOrders.size(); i++)
+        for (size_t i = 0; i < other.pendingOrders.size(); i++)
         {   
             pendingOrders.push_back(other.pendingOrders[i]);
             other.pendingOrders[i] = nullptr;
         }
-        for (int i = 0; i < other.inProcessOrders.size(); i++)
+        for (size_t i = 0; i < other.inProcessOrders.size(); i++)
         {   
             inProcessOrders.push_back(other.inProcessOrders[i]);
             other.inProcessOrders[i] = nullptr;
         }
-        for (int i = 0; i < other.completedOrders.size(); i++)
+        for (size_t i = 0; i < other.completedOrders.size(); i++)
         {   
             completedOrders.push_back(other.completedOrders[i]);
             other.completedOrders[i] = nullptr;
@@ -513,7 +523,7 @@ CollectorVolunteer* WareHouse::findAvailableCollector(Order &order)
 {
     for(Volunteer *volunteer : volunteers)
     {
-        if (volunteer->canTakeOrder(order) & dynamic_cast<CollectorVolunteer*>(volunteer) != nullptr)
+        if (volunteer->canTakeOrder(order) & (dynamic_cast<CollectorVolunteer*>(volunteer) != nullptr))
         {
             return dynamic_cast<CollectorVolunteer*>(volunteer);
         }
@@ -526,7 +536,7 @@ DriverVolunteer *WareHouse::findAvailableDriver(Order &order)
 {
     for(Volunteer *volunteer : volunteers)
     {
-        if (volunteer->canTakeOrder(order)& dynamic_cast<DriverVolunteer*>(volunteer) != nullptr)
+        if (volunteer->canTakeOrder(order) & (dynamic_cast<DriverVolunteer*>(volunteer) != nullptr))
             return dynamic_cast<DriverVolunteer*>(volunteer);
     }
     return nullptr;

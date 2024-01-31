@@ -70,6 +70,8 @@ const string Order::statusToString() const
             return "Delivering";
         case OrderStatus::COMPLETED:
             return "Completed";
+        default:
+            return "";
     }
 }
 

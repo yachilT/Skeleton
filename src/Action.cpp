@@ -28,13 +28,7 @@ string BaseAction::getErrorMsg() const
 
 string BaseAction::getStatusToString() const
 {
-    switch (status)
-    {
-    case ActionStatus::COMPLETED:
-        return "COMPLETED";
-    case ActionStatus::ERROR:
-        return "ERROR";
-    }
+    return status == ActionStatus::COMPLETED ? "COMPLETED" : "ERROR";
 }
 
 SimulateStep::SimulateStep(int numOfSteps) : numOfSteps(numOfSteps) {}
@@ -128,13 +122,10 @@ string AddCustomer::toString() const
 
 Customer *AddCustomer::createCustomer(int customerId)
 {
-    switch(customerType)
-    {
-        case CustomerType::Soldier:
-            return new SoldierCustomer(customerId, customerName, distance, maxOrders);
-        case CustomerType::Civilian:
-            return new CivilianCustomer(customerId, customerName, distance, maxOrders);
-    }
+    if (customerType == CustomerType::Soldier)
+        return new SoldierCustomer(customerId, customerName, distance, maxOrders);
+    else
+        return new CivilianCustomer(customerId, customerName, distance, maxOrders);
 }
 
 PrintOrderStatus::PrintOrderStatus(int id) : orderId(id) {}

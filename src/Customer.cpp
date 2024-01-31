@@ -4,7 +4,7 @@ Customer::Customer(int id, const string &name, int locationDistance, int maxOrde
 id(id), name(name), locationDistance(locationDistance), maxOrders(maxOrders), ordersId()
 {};
 
-Customer::Customer(const Customer &other): id(other.id), name(other.name), locationDistance(other.locationDistance), maxOrders(other.maxOrders){
+Customer::Customer(const Customer &other): id(other.id), name(other.name), locationDistance(other.locationDistance), maxOrders(other.maxOrders), ordersId(){
     
 };
 const string& Customer::getName() const {
@@ -40,7 +40,7 @@ int Customer::addOrder(int orderId)
     if (!canMakeOrder()){
         return -1;
     }
-    for (int i = 0; i < ordersId.size(); i++)
+    for (size_t i = 0; i < ordersId.size(); i++)
     {
         if (ordersId[i] == orderId)
             return -1;
