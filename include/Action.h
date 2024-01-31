@@ -42,7 +42,6 @@ class SimulateStep : public BaseAction {
 
     public:
         SimulateStep(int numOfSteps);
-        SimulateStep(const SimulateStep &other);
         void act(WareHouse &wareHouse) override;
         std::string toString() const override;
         SimulateStep *clone() const override;
@@ -54,7 +53,6 @@ class SimulateStep : public BaseAction {
 class AddOrder : public BaseAction {
     public:
         AddOrder(int id);
-        AddOrder(const AddOrder &other);
         void act(WareHouse &wareHouse) override;
         string toString() const override;
         AddOrder *clone() const override;

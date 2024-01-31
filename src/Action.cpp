@@ -32,7 +32,6 @@ string BaseAction::getStatusToString() const
 }
 
 SimulateStep::SimulateStep(int numOfSteps) : numOfSteps(numOfSteps) {}
-SimulateStep::SimulateStep(const SimulateStep &other): numOfSteps(other.numOfSteps) {}
 
 void SimulateStep::act(WareHouse &wareHouse)
 {
@@ -59,8 +58,6 @@ SimulateStep *SimulateStep::clone() const
 }
 
 AddOrder::AddOrder(int id) : customerId(id) {}
-
-AddOrder::AddOrder(const AddOrder &other) : customerId(other.customerId) {}
 
 void AddOrder::act(WareHouse &wareHouse)
 {
