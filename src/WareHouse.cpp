@@ -96,7 +96,12 @@ void WareHouse::start()
                 BaseAction *action = new PrintActionsLog();
                 action->act(*this);
             }
-            // handle backup
+            else if (splitBySpace[0] == "customer")
+            {
+                BaseAction *action = new AddCustomer(splitBySpace[1], splitBySpace[2],
+                 std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]));
+                action->act(*this);
+            }
 
             
         }

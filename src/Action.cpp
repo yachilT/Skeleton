@@ -271,7 +271,7 @@ BackupWareHouse *BackupWareHouse::clone() const
 
 string BackupWareHouse::toString() const
 {
-    return "backupWareHouse";
+    return "backup " + getStatusToString();
 }
 
 RestoreWareHouse::RestoreWareHouse() {}
@@ -295,5 +295,5 @@ RestoreWareHouse *RestoreWareHouse::clone() const
 
 string RestoreWareHouse::toString() const
 {
-    return "restoreWareHouse " + getStatusToString();
+    return "restore " + getStatusToString();
 }
