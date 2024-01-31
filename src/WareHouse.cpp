@@ -298,7 +298,7 @@ void WareHouse::fireVolunteers()
     for (auto iter = volunteers.begin(); iter < volunteers.end(); iter++) 
     {
         Volunteer *volunteer = *iter;
-        if (!volunteer->hasOrdersLeft())
+        if ((!volunteer->hasOrdersLeft()) & (!volunteer->isBusy()))
         {
             volunteers.erase(iter--);
             delete volunteer;
