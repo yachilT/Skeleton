@@ -116,7 +116,7 @@ AddCustomer *AddCustomer::clone() const
 
 string AddCustomer::toString() const
 {
-    return "addCustomer " + customerName + (customerType == CustomerType::Soldier ? "soldier" : "civilian") 
+    return "customer " + customerName + " " + (customerType == CustomerType::Soldier ? "soldier" : "civilian") 
     + " " + std::to_string(distance) + " " + std::to_string(maxOrders) + " " + getStatusToString();
 }
 
@@ -184,7 +184,7 @@ PrintCustomerStatus *PrintCustomerStatus::clone() const
 
 string PrintCustomerStatus::toString() const
 {
-    return "customerStatus: " + std::to_string(customerId) + " " + getStatusToString();
+    return "customerStatus " + std::to_string(customerId) + " " + getStatusToString();
 }
 
 PrintVolunteerStatus::PrintVolunteerStatus(int id) : volunteerId(id) {}
@@ -259,9 +259,9 @@ BackupWareHouse::BackupWareHouse() {}
 
 void BackupWareHouse::act(WareHouse &wareHouse)
 {
-    wareHouse.addAction(this);
     backup = new WareHouse(wareHouse);
     complete();
+    wareHouse.addAction(this);
 }
 
 BackupWareHouse *BackupWareHouse::clone() const
