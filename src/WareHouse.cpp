@@ -88,6 +88,7 @@ void WareHouse::start()
                     BaseAction *action = new PrintActionsLog();
                     action->act(*this);
                 }
+                // handle backup
 
             }
         }

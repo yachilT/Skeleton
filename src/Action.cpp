@@ -1,5 +1,7 @@
 #include "Action.h"
 
+extern WareHouse* backup;
+
 BaseAction::BaseAction() : errorMsg(), status(ActionStatus::COMPLETED) {}
 
 ActionStatus BaseAction::getStatus() const
@@ -68,20 +70,25 @@ AddOrder::AddOrder(const AddOrder &other) : customerId(other.customerId) {}
 
 void AddOrder::act(WareHouse &wareHouse)
 {
-    wareHouse.addAction(this);
-    Customer &customer = wareHouse.getCustomer(customerId);
-    if(customer.canMakeOrder())
-    {
-        int orderId = wareHouse.getOrdersCounter();
-        customer.addOrder(orderId);
-        Order *order = new Order(orderId, customerId, customer.getCustomerDistance());
-        wareHouse.addOrder(order);
-        complete();
-    }
+    if (!wareHouse.isCustomerExists(customerId))
+        error("Customer doesn't exist");
     else
     {
-        this->error("Cannot place this order");
+        Customer &customer = wareHouse.getCustomer(customerId);
+        if(customer.canMakeOrder())
+        {
+            int orderId = wareHouse.getOrdersCounter();
+            customer.addOrder(orderId);
+            Order *order = new Order(orderId, customerId, customer.getCustomerDistance());
+            wareHouse.addOrder(order);
+            complete();
+        }
+        else
+        {
+            this->error("Cannot place this order");
+        }
     }
+    wareHouse.addAction(this);
 }
 
 string AddOrder::toString() const
@@ -177,7 +184,7 @@ void PrintCustomerStatus::act(WareHouse &wareHouse)
         complete();
     }
     wareHouse.addAction(this);
-}
+} 
 
 PrintCustomerStatus *PrintCustomerStatus::clone() const
 {
@@ -284,7 +291,10 @@ void RestoreWareHouse::act(WareHouse &wareHouse)
     if (backup == nullptr)
         error("No backup available");
     else
+    {
+        wareHouse = WareHouse(*backup);
         complete();
+    }
 }
 
 RestoreWareHouse *RestoreWareHouse::clone() const

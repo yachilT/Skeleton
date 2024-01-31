@@ -8,7 +8,6 @@ using std::vector;
 
 
 
-extern WareHouse* backup;
 
 enum class ActionStatus{
     COMPLETED, ERROR
