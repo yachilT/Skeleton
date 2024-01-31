@@ -287,7 +287,6 @@ RestoreWareHouse::RestoreWareHouse() {}
 
 void RestoreWareHouse::act(WareHouse &wareHouse)
 {
-    wareHouse.addAction(this);
     if (backup == nullptr)
         error("No backup available");
     else
@@ -295,6 +294,7 @@ void RestoreWareHouse::act(WareHouse &wareHouse)
         wareHouse = WareHouse(*backup);
         complete();
     }
+    wareHouse.addAction(this);
 }
 
 RestoreWareHouse *RestoreWareHouse::clone() const
