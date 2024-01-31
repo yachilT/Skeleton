@@ -50,47 +50,55 @@ void WareHouse::start()
         try 
         {
             getline(std::cin, line);
-            if(line == "close")
+            vector<string> splitBySpace = splitString(line,' ');
+            if(splitBySpace[0] == "close")
             {
                 BaseAction *action = new Close();
                 action->act(*this);
             }
-            else
+            else if(splitBySpace[0] == "backup")
             {
-                vector<string> splitBySpace = splitString(line,' ');
-                if(splitBySpace[0] == "order")
-                {
-                    BaseAction *action =  new AddOrder(std::stoi(splitBySpace[1]));
-                    action->act(*this);
-                }
-                else if(splitBySpace[0] == "orderStatus")
-                {
-                    BaseAction *action = new PrintOrderStatus(std::stoi(splitBySpace[1]));
-                    action->act(*this);
-                }
-                else if(splitBySpace[0] == "step")
-                {
-                    BaseAction *action = new SimulateStep(std::stoi(splitBySpace[1]));
-                    action->act(*this);
-                }
-                else if(splitBySpace[0] == "volunteerStatus")
-                {
-                    BaseAction *action = new PrintVolunteerStatus(std::stoi(splitBySpace[1]));
-                    action->act(*this);
-                }
-                else if(splitBySpace[0] == "customerStatus")
-                {
-                    BaseAction *action = new PrintCustomerStatus(std::stoi(splitBySpace[1]));
-                    action->act(*this);
-                }
-                else if(splitBySpace[0] == "log")
-                {
-                    BaseAction *action = new PrintActionsLog();
-                    action->act(*this);
-                }
-                // handle backup
-
+                BaseAction *action = new BackupWareHouse();
+                action->act(*this);
             }
+            else if(splitBySpace[0] == "restore")
+            {
+                BaseAction *action = new RestoreWareHouse();
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "order")
+            {
+                BaseAction *action =  new AddOrder(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "orderStatus")
+            {
+                BaseAction *action = new PrintOrderStatus(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "step")
+            {
+                BaseAction *action = new SimulateStep(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "volunteerStatus")
+            {
+                BaseAction *action = new PrintVolunteerStatus(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "customerStatus")
+            {
+                BaseAction *action = new PrintCustomerStatus(std::stoi(splitBySpace[1]));
+                action->act(*this);
+            }
+            else if(splitBySpace[0] == "log")
+            {
+                BaseAction *action = new PrintActionsLog();
+                action->act(*this);
+            }
+            // handle backup
+
+            
         }
         catch(const std::exception &e){continue;}
     }
