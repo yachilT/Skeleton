@@ -11,78 +11,87 @@ customers(), pendingOrders(), inProcessOrders(), completedOrders()
         row = WareHouse::subStringByChar(row,'#');
         if(row != "")
         {
-            vector<std::string> splitBySpace = WareHouse::splitString(row, ' ');
-            if(splitBySpace[0] == "customer")
+            try 
             {
-                BaseAction* action = new AddCustomer(splitBySpace[1], splitBySpace[2], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]));
-                action->act(*this);
+                vector<string> splitBySpace = WareHouse::splitString(row, ' ');
+                if(splitBySpace[0] == "customer")
+                {
+                    BaseAction* action = new AddCustomer(splitBySpace[1], splitBySpace[2], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]));
+                    action->act(*this);
+                }
+                else if (splitBySpace[0] == "volunteer")
+                {
+                    if(splitBySpace[2] == "collector")
+                        addVolunteer(new CollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3])));
+                    else if(splitBySpace[2] == "limited_collector")
+                        addVolunteer(new LimitedCollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));
+                    else if(splitBySpace[2] == "driver")
+                        addVolunteer(new DriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));    
+                    else 
+                        addVolunteer(new LimitedDriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]), std::stoi(splitBySpace[5])));   
+                }
             }
-            else if (splitBySpace[0] == "volunteer")
-            {
-                if(splitBySpace[2] == "collector")
-                    addVolunteer(new CollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3])));
-                else if(splitBySpace[2] == "limited_collector")
-                    addVolunteer(new LimitedCollectorVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));
-                else if(splitBySpace[2] == "driver")
-                    addVolunteer(new DriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4])));    
-                else 
-                    addVolunteer(new LimitedDriverVolunteer(volunteerCounter,splitBySpace[1], std::stoi(splitBySpace[3]), std::stoi(splitBySpace[4]), std::stoi(splitBySpace[5])));   
+            catch(const std::exception &e){
             }
         }
     }
+    deleteActionsLog();
+    actionsLog = vector<BaseAction*>();
 }
 
 void WareHouse::start()
 {
     isOpen = true;
-    std::cout<<"Warehouse is open!"<<std::endl;
+    std::cout << "Warehouse is open!" << std::endl;
     while(isOpen)
     {
         string line;
 
-
-        getline(std::cin, line);
-        if(line == "close")
+        try 
         {
-            BaseAction *action = new Close();
-            action->act(*this);
-        }
-            
-        else
-        {
-            vector<string> splitBySpace = splitString(line,' ');
-            if(splitBySpace[0] == "order")
+            getline(std::cin, line);
+            if(line == "close")
             {
-                BaseAction *action =  new AddOrder(std::stoi(splitBySpace[1]));
+                BaseAction *action = new Close();
                 action->act(*this);
             }
-            else if(splitBySpace[0] == "orderStatus")
+            else
             {
-                BaseAction *action = new PrintOrderStatus(std::stoi(splitBySpace[1]));
-                action->act(*this);
-            }
-            else if(splitBySpace[0] == "step")
-            {
-                BaseAction *action = new SimulateStep(std::stoi(splitBySpace[1]));
-                action->act(*this);
-            }
-            else if(splitBySpace[0] == "volunteerStatus")
-            {
-                BaseAction *action = new PrintVolunteerStatus(std::stoi(splitBySpace[1]));
-                action->act(*this);
-            }
-            else if(splitBySpace[0] == "customerStatus")
-            {
-                BaseAction *action = new PrintCustomerStatus(std::stoi(splitBySpace[1]));
-                action->act(*this);
-            }
-            else if(splitBySpace[0] == "log")
-            {
-                BaseAction *action = new PrintActionsLog();
-                action->act(*this);
-            }
+                vector<string> splitBySpace = splitString(line,' ');
+                if(splitBySpace[0] == "order")
+                {
+                    BaseAction *action =  new AddOrder(std::stoi(splitBySpace[1]));
+                    action->act(*this);
+                }
+                else if(splitBySpace[0] == "orderStatus")
+                {
+                    BaseAction *action = new PrintOrderStatus(std::stoi(splitBySpace[1]));
+                    action->act(*this);
+                }
+                else if(splitBySpace[0] == "step")
+                {
+                    BaseAction *action = new SimulateStep(std::stoi(splitBySpace[1]));
+                    action->act(*this);
+                }
+                else if(splitBySpace[0] == "volunteerStatus")
+                {
+                    BaseAction *action = new PrintVolunteerStatus(std::stoi(splitBySpace[1]));
+                    action->act(*this);
+                }
+                else if(splitBySpace[0] == "customerStatus")
+                {
+                    BaseAction *action = new PrintCustomerStatus(std::stoi(splitBySpace[1]));
+                    action->act(*this);
+                }
+                else if(splitBySpace[0] == "log")
+                {
+                    BaseAction *action = new PrintActionsLog();
+                    action->act(*this);
+                }
 
+            }
         }
+        catch(const std::exception &e){continue;}
     }
 }
 
@@ -551,7 +560,7 @@ vector<string> WareHouse::splitString(const string& input, char delimiter) {
 
     return result;
 }
-string WareHouse::subStringByChar(const string & input, char c){
+string WareHouse::subStringByChar(const string &input, char c){
     string result;
     for(char ch: input)
     {

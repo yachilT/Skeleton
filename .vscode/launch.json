@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/warehouse",
-            "args": ["configFileExample.txt"],
+            "args": ["configFileExample(1).txt"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
